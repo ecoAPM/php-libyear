@@ -1,6 +1,8 @@
 # php-libyear
 A simple measure of dependency freshness
 
+[![Actions Status](https://github.com/stevedesmond-ca/php-libyear/workflows/CI/badge.svg)](https://github.com/stevedesmond-ca/php-libyear/actions)
+
 Calculates the total number of years behind their respective newest versions for all dependencies listed in `composer.json`.
 
 ## Usage
