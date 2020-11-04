@@ -5,6 +5,12 @@ A simple measure of dependency freshness
 
 Calculates the total number of years behind their respective newest versions for all dependencies listed in `composer.json`.
 
+## Installation
+
+Simply download `libyear.phar` from the latest release.
+
+Put it in the current directory, or your `$PATH` to be able to reference it from anywhere.
+
 ## Usage
 `php libyear.phar { path to project } [-q]`
 
