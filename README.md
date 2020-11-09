@@ -5,6 +5,10 @@ A simple measure of dependency freshness
 
 Calculates the total number of years behind their respective newest versions for all dependencies listed in `composer.json`.
 
+## Requirements
+
+- PHP 7.4 or later 
+
 ## Installation
 
 Simply download `libyear.phar` from the latest release.
