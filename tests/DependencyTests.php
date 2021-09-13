@@ -1,9 +1,9 @@
 <?php
 
-namespace Libyear\Tests;
+namespace LibYear\Tests;
 
 use DateTime;
-use Libyear\Dependency;
+use LibYear\Dependency;
 use PHPUnit\Framework\TestCase;
 
 class DependencyTests extends TestCase

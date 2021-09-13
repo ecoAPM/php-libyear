@@ -1,6 +1,6 @@
 <?php
 
-namespace Libyear;
+namespace LibYear;
 
 use GuzzleHttp\ClientInterface;
 

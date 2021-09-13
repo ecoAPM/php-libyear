@@ -1,9 +1,9 @@
 <?php
 
-namespace Libyear\Tests;
+namespace LibYear\Tests;
 
-use Libyear\ComposerFile;
-use Libyear\FileSystem;
+use LibYear\ComposerFile;
+use LibYear\FileSystem;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;

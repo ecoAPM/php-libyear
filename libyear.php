@@ -2,11 +2,11 @@
 
 use cli\Table;
 use GuzzleHttp\Client;
-use Libyear\Calculator;
-use Libyear\ComposerFile;
-use Libyear\Dependency;
-use Libyear\FileSystem;
-use Libyear\PackagistAPI;
+use LibYear\Calculator;
+use LibYear\ComposerFile;
+use LibYear\Dependency;
+use LibYear\FileSystem;
+use LibYear\PackagistAPI;
 
 echo "Gathering information...\n";
 

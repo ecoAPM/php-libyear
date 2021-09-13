@@ -1,9 +1,9 @@
 <?php
 
-namespace Libyear\Tests;
+namespace LibYear\Tests;
 
 use GuzzleHttp\ClientInterface;
-use Libyear\PackagistAPI;
+use LibYear\PackagistAPI;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;

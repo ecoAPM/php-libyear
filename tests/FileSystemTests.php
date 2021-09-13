@@ -1,8 +1,8 @@
 <?php
 
-namespace Libyear\Tests;
+namespace LibYear\Tests;
 
-use Libyear\FileSystem;
+use LibYear\FileSystem;
 use PHPUnit\Framework\TestCase;
 
 class FileSystemTests extends TestCase

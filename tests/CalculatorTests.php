@@ -1,12 +1,12 @@
 <?php
 
-namespace Libyear\Tests;
+namespace LibYear\Tests;
 
 use DateTime;
-use Libyear\Calculator;
-use Libyear\ComposerFile;
-use Libyear\Dependency;
-use Libyear\PackagistAPI;
+use LibYear\Calculator;
+use LibYear\ComposerFile;
+use LibYear\Dependency;
+use LibYear\PackagistAPI;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;

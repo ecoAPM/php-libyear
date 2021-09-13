@@ -24,8 +24,8 @@
   },
   "autoload": {
     "psr-4": {
-      "Libyear\\": "src/",
-      "Libyear\\Tests\\": "tests/"
+      "LibYear\\": "src/",
+      "LibYear\\Tests\\": "tests/"
     }
   }
 }
