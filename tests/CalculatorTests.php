@@ -61,14 +61,16 @@ class CalculatorTests extends TestCase
         ]);
 
         $packagist = Mockery::mock(PackagistAPI::class);
-        $packagist->shouldReceive('getPackageInfo')->andReturn([
-            'package' => [
-                'versions' => [
-                    '1.2.4' => ['time' => '2018-07-01']
+        $packagist->shouldReceive('getPackageInfo')->andReturn(
+            [
+                'package' => [
+                    'versions' => [
+                        '1.2.4' => ['time' => '2018-07-01']
+                    ]
                 ]
-            ]
-        ],
-            []);
+            ],
+            []
+        );
         $calculator = new Calculator($composer, $packagist);
 
         //act

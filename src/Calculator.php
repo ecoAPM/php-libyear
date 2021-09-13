@@ -40,7 +40,7 @@ class Calculator
 
     private static function sortVersions(array $package_info): array
     {
-        return Semver::rsort(array_filter(array_keys($package_info['package']['versions']), fn(string $version): bool => strpos($version, '-') === false));
+        return Semver::rsort(array_filter(array_keys($package_info['package']['versions']), fn (string $version): bool => strpos($version, '-') === false));
     }
 
     private static function findReleaseDate(array $sorted_versions, array $package_info, string $current_version): ?DateTime
@@ -59,8 +59,12 @@ class Calculator
         return new DateTime($package_info['package']['versions'][$version]['time']);
     }
 
+    /**
+     * @param Dependency[] $dependencies
+     * @return float
+     */
     public static function getTotalLibyearsBehind(array $dependencies): float
     {
-        return array_sum(array_map(fn(Dependency $dependency): float => $dependency->getLibyearsBehind() ?? 0, $dependencies));
+        return array_sum(array_map(fn (Dependency $dependency): float => $dependency->getLibyearsBehind() ?? 0, $dependencies));
     }
 }

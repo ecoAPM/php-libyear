@@ -17,7 +17,7 @@ class ComposerFile
      */
     public function getDependencies(string $directory): array
     {
-        $packages = self::getPackageNames($directory);
+        $packages = $this->getPackageNames($directory);
         $installed_versions = $this->getInstalledVersions($directory);
 
         $dependencies = [];
@@ -38,10 +38,6 @@ class ComposerFile
         return $packages;
     }
 
-    /**
-     * @param string $directory
-     * @return array
-     */
     private function getInstalledVersions(string $directory): array
     {
         $lock_json = $this->file_system->getJSON($directory . DIRECTORY_SEPARATOR . 'composer.lock');

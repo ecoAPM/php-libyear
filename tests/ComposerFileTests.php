@@ -85,11 +85,12 @@ class ComposerFileTests extends TestCase
     {
         //arrange
         $file_system = Mockery::mock(FileSystem::class);
-        $file_system->shouldReceive('getJSON')->andReturn([
-            'require' => [
-                'vendor_name/package_name' => '^1.2'
-            ]
-        ],
+        $file_system->shouldReceive('getJSON')->andReturn(
+            [
+                'require' => [
+                    'vendor_name/package_name' => '^1.2'
+                ]
+            ],
             [
                 'packages' => [
                     [
@@ -97,7 +98,8 @@ class ComposerFileTests extends TestCase
                         'version' => '1.2.3'
                     ]
                 ]
-            ]);
+            ]
+        );
         $composer = new ComposerFile($file_system);
 
         //act
