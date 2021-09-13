@@ -16,6 +16,6 @@ class FileSystemTests extends TestCase
         $composer_json = $file_system->getJSON(__DIR__ . '/../composer.json');
 
         //assert
-        $this->assertContains('libyear', $composer_json['name']);
+        $this->assertStringContainsString('libyear', $composer_json['name']);
     }
 }
