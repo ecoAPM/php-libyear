@@ -1,14 +1,14 @@
 {
-  "name": "stevedesmond-ca/libyear",
+  "name": "ecoapm/libyear",
   "description": "A simple measure of software dependency freshness",
   "homepage": "https://libyear.com",
-  "readme": "https://github.com/stevedesmond-ca/libyear/blob/master/README.md",
+  "readme": "https://github.com/ecoAPM/php-libyear/blob/master/README.md",
   "license": "MIT",
   "authors": [
     {
-      "name": "Steve Desmond",
-      "email": "steve@vtsv.ca",
-      "homepage": "https://stevedesmond.ca"
+      "name": "ecoAPM",
+      "email": "steve@ecoAPM.com",
+      "homepage": "https://ecoAPM.com"
     }
   ],
   "require": {
