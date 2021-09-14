@@ -11,6 +11,9 @@
       "homepage": "https://ecoAPM.com"
     }
   ],
+  "bin": [
+    "libyear"
+  ],
   "require": {
     "php": ">=7.4",
     "ext-json": ">=7.4",

@@ -26,8 +26,9 @@ class Calculator
 
         foreach ($dependencies as $dependency) {
             $package_info = $this->packagist->getPackageInfo($dependency->name);
-            if (empty($package_info))
+            if (empty($package_info)) {
                 continue;
+            }
 
             $sorted_versions = self::sortVersions($package_info);
             $dependency->current_version->released = $this->findReleaseDate($sorted_versions, $package_info, $dependency->current_version->version_number);

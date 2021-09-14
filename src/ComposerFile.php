@@ -31,23 +31,26 @@ class ComposerFile
     {
         $composer_json = $this->file_system->getJSON($directory . DIRECTORY_SEPARATOR . 'composer.json');
 
-        $packages = array_merge(
+        return array_merge(
             array_key_exists('require', $composer_json) ? $composer_json['require'] : [],
             array_key_exists('require-dev', $composer_json) ? $composer_json['require-dev'] : []
         );
-        return $packages;
     }
 
     private function getInstalledVersions(string $directory): array
     {
         $lock_json = $this->file_system->getJSON($directory . DIRECTORY_SEPARATOR . 'composer.lock');
+
         $installed_versions = [];
         $packages = array_merge(
             array_key_exists('packages', $lock_json) ? $lock_json['packages'] : [],
             array_key_exists('packages-dev', $lock_json) ? $lock_json['packages-dev'] : []
         );
-        foreach ($packages as $package_info)
+
+        foreach ($packages as $package_info) {
             $installed_versions[$package_info['name']] = $package_info['version'];
+        }
+
         return $installed_versions;
     }
 

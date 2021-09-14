@@ -16,8 +16,9 @@ class Dependency
 
     public function getLibyearsBehind(): ?float
     {
-        if (!isset($this->newest_version->released) || !isset($this->current_version->released))
+        if (!isset($this->newest_version->released) || !isset($this->current_version->released)) {
             return null;
+        }
 
         $age = $this->newest_version->released->diff($this->current_version->released);
         return $age->days / (365 + 97 / 400);

@@ -1,0 +1,9 @@
+#!/usr/bin/env php
+
+<?php
+
+use LibYear\Factory;
+
+require_once __DIR__ . '/vendor/autoload.php';
+
+Factory::App()->run($argv);
