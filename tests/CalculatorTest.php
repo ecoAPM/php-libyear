@@ -11,7 +11,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
-class CalculatorTests extends TestCase
+class CalculatorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 

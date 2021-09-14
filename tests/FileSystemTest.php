@@ -5,7 +5,7 @@ namespace LibYear\Tests;
 use LibYear\FileSystem;
 use PHPUnit\Framework\TestCase;
 
-class FileSystemTests extends TestCase
+class FileSystemTest extends TestCase
 {
     public function testCanReadJSON()
     {

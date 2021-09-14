@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
-class PackagistAPITests extends TestCase
+class PackagistAPITest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 

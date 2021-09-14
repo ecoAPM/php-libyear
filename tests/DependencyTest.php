@@ -6,7 +6,7 @@ use DateTime;
 use LibYear\Dependency;
 use PHPUnit\Framework\TestCase;
 
-class DependencyTests extends TestCase
+class DependencyTest extends TestCase
 {
     public function testCanGetTotalLibyearsBehind()
     {

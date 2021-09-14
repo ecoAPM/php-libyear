@@ -8,7 +8,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
-class ComposerFileTests extends TestCase
+class ComposerFileTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 

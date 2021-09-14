@@ -6,7 +6,7 @@ use LibYear\App;
 use LibYear\Factory;
 use PHPUnit\Framework\TestCase;
 
-class FactoryTests extends TestCase
+class FactoryTest extends TestCase
 {
     public function testCanCreateApp()
     {

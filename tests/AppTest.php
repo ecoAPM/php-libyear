@@ -11,7 +11,7 @@ use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
 
-class AppTests extends TestCase
+class AppTest extends TestCase
 {
     /** @var Calculator|MockInterface */
     private Calculator $calculator;
