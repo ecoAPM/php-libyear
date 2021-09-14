@@ -1,7 +1,14 @@
 # php-libyear
 A simple measure of dependency freshness
 
-[![Actions Status](https://github.com/stevedesmond-ca/php-libyear/workflows/CI/badge.svg)](https://github.com/stevedesmond-ca/php-libyear/actions)
+[![Version](https://img.shields.io/packagist/v/ecoapm/libyear?logo=packagist&label=Install)](https://packagist.org/packages/ecoAPM/libyear)
+[![CI](https://github.com/ecoAPM/php-libyear/workflows/CI/badge.svg)](https://github.com/ecoAPM/php-libyear/actions)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=ecoAPM_php-libyear&metric=coverage)](https://sonarcloud.io/dashboard?id=ecoAPM_php-libyear)
+
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=ecoAPM_php-libyear&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=ecoAPM_php-libyear)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=ecoAPM_php-libyear&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=ecoAPM_php-libyear)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=ecoAPM_php-libyear&metric=security_rating)](https://sonarcloud.io/dashboard?id=ecoAPM_php-libyear)
+
 
 Calculates the total number of years behind their respective newest versions for all dependencies listed in `composer.json`.
 

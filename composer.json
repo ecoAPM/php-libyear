@@ -2,7 +2,7 @@
   "name": "ecoapm/libyear",
   "description": "A simple measure of software dependency freshness",
   "homepage": "https://libyear.com",
-  "readme": "https://github.com/ecoAPM/php-libyear/blob/master/README.md",
+  "readme": "README.md",
   "license": "MIT",
   "authors": [
     {

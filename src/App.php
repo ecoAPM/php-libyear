@@ -11,13 +11,13 @@ class App
     private Calculator $calculator;
 
     /** @var resource */
-    private mixed $output;
+    private $output;
 
     /**
      * @param Calculator $calculator
      * @param resource $output
      */
-    public function __construct(Calculator $calculator, mixed $output)
+    public function __construct(Calculator $calculator, $output)
     {
         $this->calculator = $calculator;
         $this->output = $output;

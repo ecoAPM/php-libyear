@@ -1,0 +1,30 @@
+name: Publish
+
+on:
+  push:
+    tags: '*'
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress --no-suggest
+
+    - name: Run tests
+      run: vendor/bin/phpunit
+    
+    - name: Prepare for packaging
+      run: composer install --prefer-dist --no-progress --no-suggest --no-dev
+    
+    - name: Package build
+      run: php -dphar.readonly=0 build.php
+
+    - name: Upload build
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        name: libyear.phar
+        path: dist/libyear.phar
