@@ -14,16 +14,32 @@ Calculates the total number of years behind their respective newest versions for
 
 ## Requirements
 
-- PHP 7.4 or later 
+- PHP v7.4 or later
+- Composer v2
 
 ## Installation
 
-Simply download `libyear.phar` from the latest release.
+### Recommended: Composer
 
-Put it in the current directory, or your `$PATH` to be able to reference it from anywhere.
+Run `composer global require ecoapm/libyear` and make sure your global composer directory is in your `$PATH`.
+
+Alternatively, `composer require-dev ecoapm/libyear` will add `libyear` as a local dev dependency for your current directory's app.
+
+### Alternative: PHP Archive (PHAR) File
+
+Download `libyear.phar` from the latest release, and put it in the current directory, or somewhere in your `$PATH` to be able to reference it from anywhere.
+
+### Windows Users
+
+Note that PHP for Windows does not include CA certificates, so you'll need to install them if you haven't done so already:
+1. Download http://curl.haxx.se/ca/cacert.pem to somewhere permanent (PHP's `extras` directory is a great place)
+1. Add `curl.cainfo = "[full path to]\cacert.pem"` to your `php.ini` file
 
 ## Usage
-`php libyear.phar { path to project } [-q]`
+
+`vendor/bin/libyear { path to project } [-q]`
+
+(or `php path/to/libyear.phar { path to project } [-q]` for the PHAR version)
 
 Arguments:
 - `path to project`: required, directory containing `composer.json` and `composer.lock` files
@@ -31,6 +47,8 @@ Arguments:
 
 ## Contributing
 
-When testing new features and bug fixes, you can run the script via `php libyear.php { path } [-q]` before building the `phar` file.
+Please be sure to read and follow ecoAPM's [Contribution Guidelines](CONTRIBUTING.md) when submitting issues or pull requests.
+
+When testing new features and bug fixes, you can run the script via `./libyear { path } [-q]` before building the `phar` file.
 
 To build the `phar` file for final manual testing, run `php -dphar.readonly=0 build.php`. You may wish to run `composer install --no-dev` first to speed up the build process by removing dev dependencies, but will need to reinstall them via `composer install` (specifically, `phpunit` and `mockery` for unit testing).
