@@ -23,7 +23,7 @@ Calculates the total number of years behind their respective newest versions for
 
 Run `composer global require ecoapm/libyear` and make sure your global composer directory is in your `$PATH`.
 
-Alternatively, `composer require-dev ecoapm/libyear` will add `libyear` as a local dev dependency for your current directory's app.
+Alternatively, `composer require --dev ecoapm/libyear` will add `libyear` as a local dev dependency for your current directory's app.
 
 ### Alternative: PHP Archive (PHAR) File
 
