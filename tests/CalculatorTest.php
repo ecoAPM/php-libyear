@@ -80,6 +80,35 @@ class CalculatorTest extends TestCase
         $this->assertEquals('1.2.3', $dependencies[0]->current_version->version_number);
         $this->assertNull($dependencies[0]->current_version->released);
         $this->assertEquals('2.3.4', $dependencies[1]->current_version->version_number);
+        $this->assertNull($dependencies[1]->current_version->released);
+    }
+
+    public function testSkipsFillingOutMissingVersions()
+    {
+        //arrange
+        $dependency = new Dependency();
+        $dependency->name = 'vendor1/package1';
+        $dependency->current_version->version_number = '1.2.3';
+        $composer = Mockery::mock(ComposerFile::class, [
+            'getDependencies' => [$dependency]
+        ]);
+
+        $packagist = Mockery::mock(PackagistAPI::class);
+        $packagist->shouldReceive('getPackageInfo')->andReturn(
+            [
+                'package' => [
+                    'versions' => []
+                ]
+            ]
+        );
+        $calculator = new Calculator($composer, $packagist);
+
+        //act
+        $dependencies = $calculator->getDependencyInfo('.');
+
+        //assert
+        $this->assertEquals('1.2.3', $dependencies[0]->current_version->version_number);
+        $this->assertNull($dependencies[0]->current_version->released);
     }
 
     public function testCanGetTotalLibyearsBehind()

@@ -7,5 +7,5 @@ use DateTime;
 class Version
 {
     public string $version_number;
-    public ?DateTime $released;
+    public ?DateTime $released = null;
 }

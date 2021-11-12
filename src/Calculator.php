@@ -31,6 +31,10 @@ class Calculator
             }
 
             $sorted_versions = self::sortVersions($package_info);
+            if (empty($sorted_versions)) {
+                continue;
+            }
+
             $dependency->current_version->released = $this->findReleaseDate($sorted_versions, $package_info, $dependency->current_version->version_number);
             $dependency->newest_version->version_number = $sorted_versions[0];
             $dependency->newest_version->released = self::getReleaseDate($package_info, $sorted_versions[0]);
