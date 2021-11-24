@@ -3,19 +3,34 @@
 namespace LibYear;
 
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\GuzzleException;
 
 class PackagistAPI
 {
-    private ClientInterface $http_client;
+	private ClientInterface $http_client;
 
-    public function __construct(ClientInterface $http_client)
-    {
-        $this->http_client = $http_client;
-    }
+	/** @var resource */
+	private $stderr;
 
-    public function getPackageInfo(string $package): array
-    {
-        $response = $this->http_client->request('GET', "https://repo.packagist.org/packages/{$package}.json");
-        return json_decode($response->getBody()->getContents(), true) ?? [];
-    }
+	/**
+	 * @param ClientInterface $http_client
+	 * @param resource $stderr
+	 */
+	public function __construct(ClientInterface $http_client, $stderr)
+	{
+		$this->http_client = $http_client;
+		$this->stderr = $stderr;
+	}
+
+	public function getPackageInfo(string $package): array
+	{
+		try {
+			$response = $this->http_client->request('GET', "https://repo.packagist.org/packages/{$package}.json");
+			return json_decode($response->getBody()->getContents(), true) ?? [];
+
+		} catch (GuzzleException) {
+			fwrite($this->stderr, "Could not find info for {$package} on Packagist\n");
+			return [];
+		}
+	}
 }

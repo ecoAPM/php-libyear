@@ -19,12 +19,13 @@ class PackagistAPITest extends TestCase
         //arrange
         $http_client = Mockery::mock(ClientInterface::class, [
             'request' => Mockery::mock(ResponseInterface::class, [
+				'getStatusCode' => 200,
                 'getBody' => Mockery::mock(StreamInterface::class, [
                     'getContents' => json_encode(['test_field' => 'test value'])
                 ])
             ])
         ]);
-        $api = new PackagistAPI($http_client);
+        $api = new PackagistAPI($http_client, STDERR);
 
         //act
         $package_info = $api->getPackageInfo('vendor_name/package_name');
@@ -38,12 +39,13 @@ class PackagistAPITest extends TestCase
         //arrange
         $http_client = Mockery::mock(ClientInterface::class, [
             'request' => Mockery::mock(ResponseInterface::class, [
-                'getBody' => Mockery::mock(StreamInterface::class, [
+				'getStatusCode' => 200,
+				'getBody' => Mockery::mock(StreamInterface::class, [
                     'getContents' => json_encode(['test_field' => 'test value'])
                 ])
             ])
         ]);
-        $api = new PackagistAPI($http_client);
+        $api = new PackagistAPI($http_client, STDERR);
 
         //act
         $package_info = $api->getPackageInfo('vendor_name/package_name');
@@ -52,22 +54,23 @@ class PackagistAPITest extends TestCase
         $this->assertEquals('test value', $package_info['test_field']);
     }
 
-    public function testCanHandleBadResponse()
-    {
-        //arrange
-        $http_client = Mockery::mock(ClientInterface::class, [
-            'request' => Mockery::mock(ResponseInterface::class, [
-                'getBody' => Mockery::mock(StreamInterface::class, [
-                    'getContents' => '<html>This is not valid JSON</html>'
-                ])
-            ])
-        ]);
-        $api = new PackagistAPI($http_client);
+	public function testCanHandleBadResponse()
+	{
+		//arrange
+		$http_client = Mockery::mock(ClientInterface::class, [
+			'request' => Mockery::mock(ResponseInterface::class, [
+				'getStatusCode' => 200,
+				'getBody' => Mockery::mock(StreamInterface::class, [
+					'getContents' => '<html>This is not valid JSON</html>'
+				])
+			])
+		]);
+		$api = new PackagistAPI($http_client, STDERR);
 
-        //act
-        $package_info = $api->getPackageInfo('vendor_name/package_name');
+		//act
+		$package_info = $api->getPackageInfo('vendor_name/package_name');
 
-        //assert
-        $this->assertEquals([], $package_info);
-    }
+		//assert
+		$this->assertEquals([], $package_info);
+	}
 }

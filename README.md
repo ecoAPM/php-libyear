@@ -45,6 +45,10 @@ Arguments:
 - `path to project`: required, directory containing `composer.json` and `composer.lock` files
 - `-q`: optional, quiet mode will only output libraries which are not up-to-date (that is, where "Libyears Behind" > 0)
 
+### Limitations
+
+- Currently only packages listed on Packagist are supported (feel free to submit a PR for issue #1)
+
 ## Contributing
 
 Please be sure to read and follow ecoAPM's [Contribution Guidelines](CONTRIBUTING.md) when submitting issues or pull requests.
