@@ -1,6 +1,5 @@
 name: CI
-
-on: [push]
+on: [ push, pull_request ]
 
 jobs:
   Build:
@@ -14,33 +13,3 @@ jobs:
 
     - name: Run tests
       run: vendor/bin/phpunit
-  
-  Code-Quality:
-    needs: Build
-    runs-on: ubuntu-latest
-    if: github.actor != 'dependabot[bot]'
-
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-
-    - name: Install pcov
-      run: sudo apt install php-pcov  
-
-    - name: Install dependencies
-      run: composer install --prefer-dist --no-progress --no-suggest
-
-    - name: Run tests
-      run: vendor/bin/phpunit --log-junit results.xml --coverage-clover coverage.xml
-      env:
-        XDEBUG_MODE: coverage
-
-    - name: Prepare files
-      run: sed -i 's#'`pwd`'/##' results.xml coverage.xml
-  
-    - name: Sonar analysis
-      uses: sonarsource/sonarcloud-github-action@master
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
