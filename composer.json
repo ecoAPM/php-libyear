@@ -17,7 +17,7 @@
   "require": {
     "php": ">=7.4",
     "ext-json": ">=7.4",
-    "composer/semver": "3.2.7",
+    "composer/semver": "3.2.9",
     "guzzlehttp/guzzle": "7.4.1",
     "wp-cli/php-cli-tools": "0.11.13"
   },
