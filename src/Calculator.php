@@ -8,12 +8,12 @@ use DateTime;
 class Calculator
 {
     private ComposerFile $composer;
-    private PackagistAPI $packagist;
+    private PackageAPI $packageAPI;
 
-    public function __construct(ComposerFile $composer, PackagistAPI $packagist)
+    public function __construct(ComposerFile $composer, PackageAPI $packageAPI)
     {
         $this->composer = $composer;
-        $this->packagist = $packagist;
+        $this->packageAPI = $packageAPI;
     }
 
     /**
@@ -23,12 +23,24 @@ class Calculator
     public function getDependencyInfo(string $directory): array
     {
         $dependencies = $this->composer->getDependencies($directory);
+        $repositories = array_map(
+			fn($repositoryUrl) => $this->packageAPI->getRepositoryInfo($repositoryUrl),
+			$this->composer->getRepositoriesUrl($directory) ?: ['https://repo.packagist.org']
+		);
 
         foreach ($dependencies as $dependency) {
-            $package_info = $this->packagist->getPackageInfo($dependency->name);
-            if (empty($package_info)) {
-                continue;
-            }
+			foreach ($repositories as $repository) {
+				if (!$repository->hasPackage($dependency->name)) {
+					continue;
+				}
+				$package_info = $this->packageAPI->getPackageInfo($dependency->name, $repository->getPackageUrl($dependency->name));
+				if (!empty($package_info)) {
+					break;
+				}
+			}
+			if (empty($package_info)) {
+				continue;
+			}
 
             $sorted_versions = self::sortVersions($package_info);
             if (empty($sorted_versions)) {
@@ -45,7 +57,7 @@ class Calculator
 
     private static function sortVersions(array $package_info): array
     {
-        return Semver::rsort(array_filter(array_keys($package_info['package']['versions']), fn (string $version): bool => strpos($version, '-') === false));
+        return Semver::rsort(array_filter(array_keys($package_info), fn (string $version): bool => strpos($version, '-') === false));
     }
 
     private static function findReleaseDate(array $sorted_versions, array $package_info, string $current_version): ?DateTime
@@ -61,7 +73,7 @@ class Calculator
 
     private static function getReleaseDate(array $package_info, string $version): DateTime
     {
-        return new DateTime($package_info['package']['versions'][$version]['time']);
+        return new DateTime($package_info[$version]['time']);
     }
 
     /**

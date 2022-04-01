@@ -27,6 +27,14 @@ class ComposerFile
         return $dependencies;
     }
 
+	public function getRepositoriesUrl(string $directory): array
+	{
+		$composer_json = $this->file_system->getJSON($directory . DIRECTORY_SEPARATOR . 'composer.json');
+		$repositories = $composer_json['repositories'] ?? [];
+
+		return array_column($repositories, 'url');
+	}
+
     private function getPackageNames(string $directory): array
     {
         $composer_json = $this->file_system->getJSON($directory . DIRECTORY_SEPARATOR . 'composer.json');
