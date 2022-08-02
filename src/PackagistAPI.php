@@ -27,8 +27,7 @@ class PackagistAPI
 		try {
 			$response = $this->http_client->request('GET', "https://repo.packagist.org/packages/{$package}.json");
 			return json_decode($response->getBody()->getContents(), true) ?? [];
-
-		} catch (GuzzleException) {
+		} catch (GuzzleException $e) {
 			fwrite($this->stderr, "Could not find info for {$package} on Packagist\n");
 			return [];
 		}
