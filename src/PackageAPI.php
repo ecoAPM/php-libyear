@@ -24,7 +24,7 @@ class PackageAPI
 				return array_column($result['packages'][$name], null, 'version');
 			}
 
-		} catch (GuzzleException) {
+		} catch (GuzzleException $guzzleException) {
 			fwrite($this->stderr, "Could not find info for {$packageUrl}\n");
 		}
 
@@ -44,7 +44,7 @@ class PackageAPI
 					$result['available-packages'] ?? []
 				);
 			}
-		} catch (GuzzleException) {
+		} catch (GuzzleException $guzzleException) {
 			fwrite($this->stderr, "Could not find info for {$repositoryUrl}\n");
 		}
 
