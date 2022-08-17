@@ -19,7 +19,7 @@
     "ext-json": ">=7.4",
     "composer/semver": "3.3.2",
     "guzzlehttp/guzzle": "^7.3",
-    "wp-cli/php-cli-tools": "0.11.13"
+    "wp-cli/php-cli-tools": "0.11.14"
   },
   "require-dev": {
     "phpunit/phpunit": "9.5.19",
