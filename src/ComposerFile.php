@@ -27,13 +27,25 @@ class ComposerFile
         return $dependencies;
     }
 
+	public function getRepositoriesUrl(string $directory): array
+	{
+		$composerJson = $this->file_system->getJSON($directory . DIRECTORY_SEPARATOR . 'composer.json');
+
+		return array_map(
+			fn($repository) => rtrim($repository, '/'),
+			array_column(
+				$composerJson['repositories'] ?? [],
+				'url')
+		);
+	}
+
     private function getPackageNames(string $directory): array
     {
-        $composer_json = $this->file_system->getJSON($directory . DIRECTORY_SEPARATOR . 'composer.json');
+		$composerJson = $this->file_system->getJSON($directory . DIRECTORY_SEPARATOR . 'composer.json');
 
         return array_merge(
-            array_key_exists('require', $composer_json) ? $composer_json['require'] : [],
-            array_key_exists('require-dev', $composer_json) ? $composer_json['require-dev'] : []
+            array_key_exists('require', $composerJson) ? $composerJson['require'] : [],
+            array_key_exists('require-dev', $composerJson) ? $composerJson['require-dev'] : []
         );
     }
 

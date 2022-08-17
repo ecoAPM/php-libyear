@@ -39,6 +39,40 @@ class ComposerFileTest extends TestCase
         $this->assertEquals('4.5.6', $dependencies['vendor3/package1']->current_version->version_number);
     }
 
+	public function testCanGetRepositoriesFromComposerFiles()
+	{
+		//arrange
+		$file_system = Mockery::mock(FileSystem::class, [
+			'getJSON' => [
+				'require' => [
+					'vendor1/package1' => '1.2.3',
+					'vendor1/package2' => '2.3.4',
+					'vendor2/package1' => '3.4.5',
+				],
+				'require-dev' => [
+					'vendor3/package1' => '4.5.6'
+				],
+				'repositories' => [
+					[
+						'type' => 'composer',
+						'url' => 'repo.url'
+					],
+					[
+						'packagist.org' => false
+					]
+				]
+			]
+		]);
+		$composer = new ComposerFile($file_system);
+
+		//act
+		$repositoriesUrl = $composer->getRepositoriesUrl('.');
+
+		//assert
+		$this->assertCount(1, $repositoriesUrl);
+		$this->assertEquals('repo.url', $repositoriesUrl[0]);
+	}
+
     public function testCanGetDependenciesWhenNoDev()
     {
         //arrange
