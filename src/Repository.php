@@ -13,13 +13,13 @@ class Repository
 	public function __construct(string $url, string $metadata_url, array $available_packages)
 	{
 		$this->url = $url;
-		$this->metadata_url = $this->setMetadataUrl($metadata_url);
+		$this->metadata_url = $this->fixMetadataUrl($metadata_url);
 		$this->available_packages = $available_packages;
 	}
 
-	private function setMetadataUrl(?string $url): ?string
+	private function fixMetadataUrl(?string $url): ?string
 	{
-		return str_replace(['/internal/', '/external/'], '', $url);
+		return preg_replace('/.*\/p2/', '/p2', $url);
 	}
 
 	public function hasPackage(string $package): bool
