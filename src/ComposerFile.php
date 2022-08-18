@@ -32,7 +32,10 @@ class ComposerFile
 		$composer_json = $this->file_system->getJSON($directory . DIRECTORY_SEPARATOR . 'composer.json');
 		$repositories = $composer_json['repositories'] ?? [];
 
-		return array_column($repositories, 'url');
+		return array_map(
+			fn($repository) => rtrim($repository, '/'),
+			array_column($repositories, 'url')
+		);
 	}
 
     private function getPackageNames(string $directory): array

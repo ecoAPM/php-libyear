@@ -7,14 +7,19 @@ use GuzzleHttp\ClientInterface;
 class Repository
 {
 	private string $url;
-	private string $metadata_url;
+	private ?string $metadata_url;
 	private array $available_packages;
 
 	public function __construct(string $url, string $metadata_url, array $available_packages)
 	{
 		$this->url = $url;
-		$this->metadata_url = $metadata_url;
+		$this->metadata_url = $this->setMetadataUrl($metadata_url);
 		$this->available_packages = $available_packages;
+	}
+
+	private function setMetadataUrl(?string $url): ?string
+	{
+		return str_replace(['/internal/', '/external/'], '', $url);
 	}
 
 	public function hasPackage(string $package): bool
