@@ -30,7 +30,7 @@ class Calculator
 
         foreach ($dependencies as $dependency) {
 			foreach ($repositories as $repository) {
-				if (!$repository->hasPackage($dependency->name)) {
+				if ($repository == null || !$repository->hasPackage($dependency->name)) {
 					continue;
 				}
 				$package_info = $this->packageAPI->getPackageInfo($dependency->name, $repository->getPackageUrl($dependency->name));
