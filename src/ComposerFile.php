@@ -29,8 +29,8 @@ class ComposerFile
 
 	public function getRepositoriesUrl(string $directory): array
 	{
-		$composer_json = $this->file_system->getJSON($directory . DIRECTORY_SEPARATOR . 'composer.json');
-		$repositories = $composer_json['repositories'] ?? [];
+		$composerJson = $this->file_system->getJSON($directory . DIRECTORY_SEPARATOR . 'composer.json');
+		$repositories = $composerJson['repositories'] ?? [];
 
 		return array_map(
 			fn($repository) => rtrim($repository, '/'),
@@ -40,11 +40,11 @@ class ComposerFile
 
     private function getPackageNames(string $directory): array
     {
-        $composer_json = $this->file_system->getJSON($directory . DIRECTORY_SEPARATOR . 'composer.json');
+		$composerJson = $this->file_system->getJSON($directory . DIRECTORY_SEPARATOR . 'composer.json');
 
         return array_merge(
-            array_key_exists('require', $composer_json) ? $composer_json['require'] : [],
-            array_key_exists('require-dev', $composer_json) ? $composer_json['require-dev'] : []
+            array_key_exists('require', $composerJson) ? $composerJson['require'] : [],
+            array_key_exists('require-dev', $composerJson) ? $composerJson['require-dev'] : []
         );
     }
 
