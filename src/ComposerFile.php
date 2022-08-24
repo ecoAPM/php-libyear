@@ -30,11 +30,12 @@ class ComposerFile
 	public function getRepositoriesUrl(string $directory): array
 	{
 		$composerJson = $this->file_system->getJSON($directory . DIRECTORY_SEPARATOR . 'composer.json');
-		$repositories = $composerJson['repositories'] ?? [];
 
 		return array_map(
 			fn($repository) => rtrim($repository, '/'),
-			array_column($repositories, 'url')
+			array_column(
+				$composerJson['repositories'] ?? [],
+				'url')
 		);
 	}
 

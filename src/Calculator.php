@@ -28,29 +28,28 @@ class Calculator
 			$this->composer->getRepositoriesUrl($directory) ?: ['https://repo.packagist.org']
 		);
 
-        foreach ($dependencies as $dependency) {
-			foreach ($repositories as $repository) {
-				if ($repository == null || !$repository->hasPackage($dependency->name)) {
-					continue;
+		$dependencyIterator = new \ArrayIterator($dependencies);
+		$repositoriesIterator = new \ArrayIterator($repositories);
+		while ($dependencyIterator->valid()) {
+			while(empty($package_info) && $repositoriesIterator->valid()) {
+				if ($repositoriesIterator->current()->hasPackage($dependencyIterator->current()->name)) {
+					$package_info = $this->packageAPI
+						->getPackageInfo(
+							$dependencyIterator->current()->name,
+							$repositoriesIterator->current()->getPackageUrl($dependencyIterator->current()->name)
+						);
 				}
-				$package_info = $this->packageAPI->getPackageInfo($dependency->name, $repository->getPackageUrl($dependency->name));
-				if (!empty($package_info)) {
-					break;
-				}
+				$repositoriesIterator->next();
 			}
-			if (empty($package_info)) {
-				continue;
+			if (isset($package_info)) {
+				$sorted_versions = self::sortVersions($package_info);
+				$dependencyIterator->current()->current_version->released = $this->findReleaseDate($sorted_versions, $package_info, $dependencyIterator->current()->current_version->version_number);
+				$dependencyIterator->current()->newest_version->version_number = $sorted_versions[0];
+				$dependencyIterator->current()->newest_version->released = self::getReleaseDate($package_info, $sorted_versions[0]);
 			}
-
-            $sorted_versions = self::sortVersions($package_info);
-            if (empty($sorted_versions)) {
-                continue;
-            }
-
-            $dependency->current_version->released = $this->findReleaseDate($sorted_versions, $package_info, $dependency->current_version->version_number);
-            $dependency->newest_version->version_number = $sorted_versions[0];
-            $dependency->newest_version->released = self::getReleaseDate($package_info, $sorted_versions[0]);
-        }
+			$repositoriesIterator->rewind();
+			$dependencyIterator->next();
+		}
 
         return $dependencies;
     }
