@@ -24,7 +24,7 @@ class Repository
 
 	public function hasPackage(string $package): bool
 	{
-		return empty($this->availablePackages) && in_array($package, $this->availablePackages);
+		return in_array($package, $this->availablePackages);
 	}
 
 	public function getPackageUrl(string $package): string
