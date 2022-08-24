@@ -24,12 +24,13 @@ class Calculator
     {
         $dependencies = $this->composer->getDependencies($directory);
         $repositories = array_map(
-			fn($repositoryUrl) => $this->packageAPI->getRepositoryInfo($repositoryUrl),
+			fn($repositoryUrl): ?Repository => $this->packageAPI->getRepositoryInfo($repositoryUrl),
 			$this->composer->getRepositoriesUrl($directory) ?: ['https://repo.packagist.org']
 		);
 
 		$dependencyIterator = new \ArrayIterator($dependencies);
 		$repositoriesIterator = new \ArrayIterator($repositories);
+		$package_info = [];
 		while ($dependencyIterator->valid()) {
 			while(empty($package_info) && $repositoriesIterator->valid()) {
 				if ($repositoriesIterator->current()->hasPackage($dependencyIterator->current()->name)) {
@@ -41,7 +42,7 @@ class Calculator
 				}
 				$repositoriesIterator->next();
 			}
-			if (isset($package_info)) {
+			if (!empty($package_info)) {
 				$sorted_versions = self::sortVersions($package_info);
 				$dependencyIterator->current()->current_version->released = $this->findReleaseDate($sorted_versions, $package_info, $dependencyIterator->current()->current_version->version_number);
 				$dependencyIterator->current()->newest_version->version_number = $sorted_versions[0];

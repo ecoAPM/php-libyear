@@ -19,7 +19,7 @@ class Repository
 
 	private function fixMetadataUrl(?string $url): ?string
 	{
-		return preg_replace('/.*\/p2/', '/p2', $url);
+		return strstr($url, '/p2');
 	}
 
 	public function hasPackage(string $package): bool
