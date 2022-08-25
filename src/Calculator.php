@@ -24,8 +24,8 @@ class Calculator
     {
         $dependencies = $this->composer->getDependencies($directory);
         $repositories = array_map(
-			fn($repositoryUrl): ?Repository => $this->packageAPI->getRepositoryInfo($repositoryUrl),
-			$this->composer->getRepositoriesUrl($directory) ?: ['https://repo.packagist.org']
+            fn($repositoryUrl): ?Repository => $this->packageAPI->getRepositoryInfo($repositoryUrl),
+            $this->composer->getRepositoriesUrl($directory) ?: ['https://repo.packagist.org']
 		);
 
 		$dependencyIterator = new \ArrayIterator($dependencies);
