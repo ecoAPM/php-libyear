@@ -20,40 +20,40 @@ class Calculator
      * @param string $directory
      * @return Dependency[]
      */
-    public function getDependencyInfo(string $directory): array
-    {
-        $dependencies = $this->composer->getDependencies($directory);
-        $repositories = array_map(
-            fn($repositoryUrl): ?Repository => $this->packageAPI->getRepositoryInfo($repositoryUrl),
-            $this->composer->getRepositoriesUrl($directory) ?: ['https://repo.packagist.org']
+	public function getDependencyInfo(string $directory): array
+	{
+		$dependencies = $this->composer->getDependencies($directory);
+		$repositories = array_map(
+			fn($repositoryUrl) => $this->packageAPI->getRepositoryInfo($repositoryUrl),
+			$this->composer->getRepositoriesUrl($directory) ?: ['https://repo.packagist.org']
 		);
 
-		$dependencyIterator = new \ArrayIterator($dependencies);
-		$repositoriesIterator = new \ArrayIterator($repositories);
-		$package_info = [];
-		while ($dependencyIterator->valid()) {
-			while(empty($package_info) && $repositoriesIterator->valid()) {
-				if ($repositoriesIterator->current()->hasPackage($dependencyIterator->current()->name)) {
-					$package_info = $this->packageAPI
-						->getPackageInfo(
-							$dependencyIterator->current()->name,
-							$repositoriesIterator->current()->getPackageUrl($dependencyIterator->current()->name)
-						);
+		foreach ($dependencies as $dependency) {
+			foreach ($repositories as $repository) {
+				if (!$repository->hasPackage($dependency->name)) {
+					continue;
 				}
-				$repositoriesIterator->next();
+				$package_info = $this->packageAPI->getPackageInfo($dependency->name, $repository->getPackageUrl($dependency->name));
+				if (!empty($package_info)) {
+					break;
+				}
 			}
-			if (!empty($package_info)) {
-				$sorted_versions = self::sortVersions($package_info);
-				$dependencyIterator->current()->current_version->released = $this->findReleaseDate($sorted_versions, $package_info, $dependencyIterator->current()->current_version->version_number);
-				$dependencyIterator->current()->newest_version->version_number = $sorted_versions[0];
-				$dependencyIterator->current()->newest_version->released = self::getReleaseDate($package_info, $sorted_versions[0]);
+			if (empty($package_info)) {
+				continue;
 			}
-			$repositoriesIterator->rewind();
-			$dependencyIterator->next();
+
+			$sorted_versions = self::sortVersions($package_info);
+			if (empty($sorted_versions)) {
+				continue;
+			}
+
+			$dependency->current_version->released = $this->findReleaseDate($sorted_versions, $package_info, $dependency->current_version->version_number);
+			$dependency->newest_version->version_number = $sorted_versions[0];
+			$dependency->newest_version->released = self::getReleaseDate($package_info, $sorted_versions[0]);
 		}
 
-        return $dependencies;
-    }
+		return $dependencies;
+	}
 
     private static function sortVersions(array $package_info): array
     {

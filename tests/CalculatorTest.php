@@ -32,7 +32,7 @@ class CalculatorTest extends TestCase
 				'1.2.3' => ['time' => '2018-07-01'],
 				'2.3.4' => ['time' => '2020-01-01']
             ],
-			'getRepositoryInfo' => new Repository('repo.packagist.org', '/p2/%package%.json', [])
+			'getRepositoryInfo' => new Repository('repo.packagist.org', '/p2/%package%.json', ['vendor_name/package_name'])
         ]);
         $calculator = new Calculator($composer, $packagist);
 
@@ -69,7 +69,7 @@ class CalculatorTest extends TestCase
 			->andReturn(new Repository('https://custom-repo.com', '/p2/%package%.json', ['vendor_name/second_package_name']));
 		$packagist->shouldReceive('getRepositoryInfo')
 			->with('https://repo.packagist.org')
-			->andReturn(new Repository('https://repo.packagist.org', '/p2/%package%.json', []));
+			->andReturn(new Repository('https://repo.packagist.org', '/p2/%package%.json', ['vendor_name/package_name']));
 
 		$packagist->shouldReceive('getPackageInfo')
 			->with('vendor_name/package_name', 'https://repo.packagist.org/p2/vendor_name/package_name.json')
