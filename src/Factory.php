@@ -13,7 +13,7 @@ class Factory
         $file = new ComposerFile($fs);
 
         $http = new Client();
-        $api = new PackagistAPI($http, STDERR);
+        $api = new PackageAPI($http, STDERR);
 
         $calculator = new Calculator($file, $api);
         return new App($calculator, STDOUT);
