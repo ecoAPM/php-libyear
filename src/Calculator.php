@@ -25,7 +25,7 @@ class Calculator
 		$dependencies = $this->composer->getDependencies($directory);
 		$repositories = array_map(
 			fn($repositoryUrl) => $this->packageAPI->getRepositoryInfo($repositoryUrl),
-			$this->composer->getRepositoriesUrl($directory) ?: ['https://repo.packagist.org']
+			$this->composer->getRepositoriesUrl($directory)
 		);
 
 		foreach ($dependencies as $dependency) {
