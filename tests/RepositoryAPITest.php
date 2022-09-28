@@ -14,7 +14,28 @@ class RepositoryAPITest extends TestCase
 {
 	use MockeryPHPUnitIntegration;
 
-	public function testCallsCorrectURL()
+	public function testCanGetRepositoryInfo()
+	{
+		//arrange
+		$http_client = Mockery::mock(ClientInterface::class, [
+			'request' => Mockery::mock(ResponseInterface::class, [
+				'getStatusCode' => 200,
+				'getBody' => Mockery::mock(StreamInterface::class, [
+					'getContents' => json_encode(['metadata-url' => '/metadata/%package%.json'])
+				])
+			])
+		]);
+		$api = new RepositoryAPI($http_client, STDERR);
+
+		//act
+		$repo = $api->getInfo('https://composer.example.com');
+
+		//assert
+		$this->assertEquals('https://composer.example.com', $repo->url);
+		$this->assertEquals('/metadata/%package%.json', $repo->metadata_pattern);
+	}
+
+	public function testGetPackageInfoCallsCorrectURL()
 	{
 		//arrange
 		$http_client = Mockery::mock(ClientInterface::class, [
@@ -28,7 +49,7 @@ class RepositoryAPITest extends TestCase
 		$api = new RepositoryAPI($http_client, STDERR);
 
 		//act
-		$package_info = $api->getPackageInfo('vendor_name/package_name');
+		$api->getPackageInfo('vendor_name/package_name');
 
 		//assert
 		$http_client->shouldHaveReceived('request')->with('GET', 'https://repo.packagist.org/packages/vendor_name/package_name.json');
