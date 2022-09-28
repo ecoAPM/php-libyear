@@ -3,14 +3,14 @@
 namespace LibYear\Tests;
 
 use GuzzleHttp\ClientInterface;
-use LibYear\PackagistAPI;
+use LibYear\RepositoryAPI;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
-class PackagistAPITest extends TestCase
+class RepositoryAPITest extends TestCase
 {
 	use MockeryPHPUnitIntegration;
 
@@ -25,7 +25,7 @@ class PackagistAPITest extends TestCase
 				])
 			])
 		]);
-		$api = new PackagistAPI($http_client, STDERR);
+		$api = new RepositoryAPI($http_client, STDERR);
 
 		//act
 		$package_info = $api->getPackageInfo('vendor_name/package_name');
@@ -45,7 +45,7 @@ class PackagistAPITest extends TestCase
 				])
 			])
 		]);
-		$api = new PackagistAPI($http_client, STDERR);
+		$api = new RepositoryAPI($http_client, STDERR);
 
 		//act
 		$package_info = $api->getPackageInfo('vendor_name/package_name');
@@ -65,7 +65,7 @@ class PackagistAPITest extends TestCase
 				])
 			])
 		]);
-		$api = new PackagistAPI($http_client, STDERR);
+		$api = new RepositoryAPI($http_client, STDERR);
 
 		//act
 		$package_info = $api->getPackageInfo('vendor_name/package_name');

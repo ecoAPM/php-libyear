@@ -6,7 +6,7 @@ use DateTime;
 use LibYear\Calculator;
 use LibYear\ComposerFile;
 use LibYear\Dependency;
-use LibYear\PackagistAPI;
+use LibYear\RepositoryAPI;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -25,7 +25,7 @@ class CalculatorTest extends TestCase
 			'getDependencies' => [$dependency]
 		]);
 
-		$packagist = Mockery::mock(PackagistAPI::class, [
+		$repo = Mockery::mock(RepositoryAPI::class, [
 			'getPackageInfo' => [
 				'package' => [
 					'versions' => [
@@ -35,7 +35,7 @@ class CalculatorTest extends TestCase
 				]
 			]
 		]);
-		$calculator = new Calculator($composer, $packagist);
+		$calculator = new Calculator($composer, $repo);
 
 		//act
 		$dependencies = $calculator->getDependencyInfo('.');
@@ -60,8 +60,8 @@ class CalculatorTest extends TestCase
 			'getDependencies' => [$dependency1, $dependency2]
 		]);
 
-		$packagist = Mockery::mock(PackagistAPI::class);
-		$packagist->shouldReceive('getPackageInfo')->andReturn(
+		$repo = Mockery::mock(RepositoryAPI::class);
+		$repo->shouldReceive('getPackageInfo')->andReturn(
 			[
 				'package' => [
 					'versions' => [
@@ -71,7 +71,7 @@ class CalculatorTest extends TestCase
 			],
 			[]
 		);
-		$calculator = new Calculator($composer, $packagist);
+		$calculator = new Calculator($composer, $repo);
 
 		//act
 		$dependencies = $calculator->getDependencyInfo('.');
@@ -93,15 +93,15 @@ class CalculatorTest extends TestCase
 			'getDependencies' => [$dependency]
 		]);
 
-		$packagist = Mockery::mock(PackagistAPI::class);
-		$packagist->shouldReceive('getPackageInfo')->andReturn(
+		$repo = Mockery::mock(RepositoryAPI::class);
+		$repo->shouldReceive('getPackageInfo')->andReturn(
 			[
 				'package' => [
 					'versions' => []
 				]
 			]
 		);
-		$calculator = new Calculator($composer, $packagist);
+		$calculator = new Calculator($composer, $repo);
 
 		//act
 		$dependencies = $calculator->getDependencyInfo('.');

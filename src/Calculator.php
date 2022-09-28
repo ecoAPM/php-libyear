@@ -8,12 +8,12 @@ use DateTime;
 class Calculator
 {
 	private ComposerFile $composer;
-	private PackagistAPI $packagist;
+	private RepositoryAPI $repo;
 
-	public function __construct(ComposerFile $composer, PackagistAPI $packagist)
+	public function __construct(ComposerFile $composer, RepositoryAPI $repo)
 	{
 		$this->composer = $composer;
-		$this->packagist = $packagist;
+		$this->repo = $repo;
 	}
 
 	/**
@@ -25,7 +25,7 @@ class Calculator
 		$dependencies = $this->composer->getDependencies($directory);
 
 		foreach ($dependencies as $dependency) {
-			$package_info = $this->packagist->getPackageInfo($dependency->name);
+			$package_info = $this->repo->getPackageInfo($dependency->name);
 			if (empty($package_info)) {
 				continue;
 			}

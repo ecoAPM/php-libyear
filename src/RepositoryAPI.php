@@ -5,7 +5,7 @@ namespace LibYear;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 
-class PackagistAPI
+class RepositoryAPI
 {
 	private ClientInterface $http_client;
 
