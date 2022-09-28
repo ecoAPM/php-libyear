@@ -8,12 +8,12 @@ use DateTime;
 class Calculator
 {
 	private ComposerFile $composer;
-	private RepositoryAPI $repo;
+	private RepositoryAPI $repo_api;
 
-	public function __construct(ComposerFile $composer, RepositoryAPI $repo)
+	public function __construct(ComposerFile $composer, RepositoryAPI $repo_api)
 	{
 		$this->composer = $composer;
-		$this->repo = $repo;
+		$this->repo_api = $repo_api;
 	}
 
 	/**
@@ -22,46 +22,71 @@ class Calculator
 	 */
 	public function getDependencyInfo(string $directory): array
 	{
+		$repository_urls = $this->composer->getRepositories($directory);
+		$repositories = array_map(fn(string $url) => $this->repo_api->getInfo($url), $repository_urls);
+
 		$dependencies = $this->composer->getDependencies($directory);
 
 		foreach ($dependencies as $dependency) {
-			$package_info = $this->repo->getPackageInfo($dependency->name);
-			if (empty($package_info)) {
-				continue;
-			}
-
-			$sorted_versions = self::sortVersions($package_info);
-			if (empty($sorted_versions)) {
-				continue;
-			}
-
-			$dependency->current_version->released = $this->findReleaseDate($sorted_versions, $package_info, $dependency->current_version->version_number);
-			$dependency->newest_version->version_number = $sorted_versions[0];
-			$dependency->newest_version->released = self::getReleaseDate($package_info, $sorted_versions[0]);
+			$this->updateDependency($dependency, $repositories);
 		}
 
 		return $dependencies;
 	}
 
-	private static function sortVersions(array $package_info): array
+	/**
+	 * @param Dependency $dependency
+	 * @param Repository[] $repositories
+	 * @return void
+	 */
+	private function updateDependency(Dependency $dependency, array $repositories)
 	{
-		return Semver::rsort(array_filter(array_keys($package_info['package']['versions']), fn(string $version): bool => strpos($version, '-') === false));
+		$package_info = [];
+		foreach ($repositories as $repository) {
+			$package_info = $this->repo_api->getPackageInfo($dependency->name, $repository);
+			if (!empty($package_info)) {
+				break;
+			}
+		}
+
+		if (empty($package_info)) {
+			return;
+		}
+
+		$versions = self::getVersions($package_info);
+		if (empty($versions)) {
+			return;
+		}
+
+		$sorted_versions = Semver::rsort(array_keys($versions));
+		$dependency->current_version->released = $this->findReleaseDate($sorted_versions, $versions, $dependency->current_version->version_number);
+		$newest_version = $sorted_versions[0];
+		$dependency->newest_version->version_number = $newest_version;
+		$dependency->newest_version->released = $versions[$newest_version];
 	}
 
-	private static function findReleaseDate(array $sorted_versions, array $package_info, string $current_version): ?DateTime
+	/**
+	 * @param array $releases
+	 * @return DateTime[]
+	 */
+	private static function getVersions(array $releases): array
+	{
+		$versions = [];
+		foreach($releases as $release) {
+			$versions[$release['version']] = new DateTime($release['time']);
+		}
+		return $versions;
+	}
+
+	private static function findReleaseDate(array $sorted_versions, array $versions, string $current_version): ?DateTime
 	{
 		foreach ($sorted_versions as $version_to_check) {
 			if (Semver::satisfies($version_to_check, $current_version)) {
-				return self::getReleaseDate($package_info, $version_to_check);
+				return $versions[$version_to_check];
 			}
 		}
 
 		return null;
-	}
-
-	private static function getReleaseDate(array $package_info, string $version): DateTime
-	{
-		return new DateTime($package_info['package']['versions'][$version]['time']);
 	}
 
 	/**

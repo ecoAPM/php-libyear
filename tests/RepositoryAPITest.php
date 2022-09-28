@@ -3,6 +3,7 @@
 namespace LibYear\Tests;
 
 use GuzzleHttp\ClientInterface;
+use LibYear\Repository;
 use LibYear\RepositoryAPI;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -38,18 +39,23 @@ class RepositoryAPITest extends TestCase
 	public function testGetPackageInfoCallsCorrectURL()
 	{
 		//arrange
+		$repo = new Repository('https://repo.packagist.org', '/packages/%package%.json');
 		$http_client = Mockery::mock(ClientInterface::class, [
 			'request' => Mockery::mock(ResponseInterface::class, [
 				'getStatusCode' => 200,
 				'getBody' => Mockery::mock(StreamInterface::class, [
-					'getContents' => json_encode(['test_field' => 'test value'])
+					'getContents' => json_encode([
+						'packages' => [
+							'vendor_name/package_name' => []
+						]
+					])
 				])
 			])
 		]);
 		$api = new RepositoryAPI($http_client, STDERR);
 
 		//act
-		$api->getPackageInfo('vendor_name/package_name');
+		$api->getPackageInfo('vendor_name/package_name', $repo);
 
 		//assert
 		$http_client->shouldHaveReceived('request')->with('GET', 'https://repo.packagist.org/packages/vendor_name/package_name.json');
@@ -58,18 +64,25 @@ class RepositoryAPITest extends TestCase
 	public function testCanGetPackageInfo()
 	{
 		//arrange
+		$repo = new Repository('https://repo.packagist.org', '/packages/%package%.json');
 		$http_client = Mockery::mock(ClientInterface::class, [
 			'request' => Mockery::mock(ResponseInterface::class, [
 				'getStatusCode' => 200,
 				'getBody' => Mockery::mock(StreamInterface::class, [
-					'getContents' => json_encode(['test_field' => 'test value'])
+					'getContents' => json_encode([
+						'packages' => [
+							'vendor_name/package_name' => [
+								'test_field' => 'test value'
+							]
+						]
+					])
 				])
 			])
 		]);
 		$api = new RepositoryAPI($http_client, STDERR);
 
 		//act
-		$package_info = $api->getPackageInfo('vendor_name/package_name');
+		$package_info = $api->getPackageInfo('vendor_name/package_name', $repo);
 
 		//assert
 		$this->assertEquals('test value', $package_info['test_field']);
@@ -78,6 +91,7 @@ class RepositoryAPITest extends TestCase
 	public function testCanHandleBadResponse()
 	{
 		//arrange
+		$repo = new Repository('https://repo.packagist.org', '/packages/%package%.json');
 		$http_client = Mockery::mock(ClientInterface::class, [
 			'request' => Mockery::mock(ResponseInterface::class, [
 				'getStatusCode' => 200,
@@ -89,7 +103,7 @@ class RepositoryAPITest extends TestCase
 		$api = new RepositoryAPI($http_client, STDERR);
 
 		//act
-		$package_info = $api->getPackageInfo('vendor_name/package_name');
+		$package_info = $api->getPackageInfo('vendor_name/package_name', $repo);
 
 		//assert
 		$this->assertEquals([], $package_info);

@@ -34,13 +34,15 @@ class RepositoryAPI
 		}
 	}
 
-	public function getPackageInfo(string $package): array
+	public function getPackageInfo(string $package, Repository $repository): array
 	{
 		try {
-			$response = $this->http_client->request('GET', "https://repo.packagist.org/packages/{$package}.json");
-			return json_decode($response->getBody()->getContents(), true) ?? [];
+			$url = $repository->getMetadataURL($package);
+			$response = $this->http_client->request('GET', $url);
+			$json = json_decode($response->getBody()->getContents(), true);
+			return $json['packages'][$package] ?? [];
 		} catch (GuzzleException $e) {
-			fwrite($this->stderr, "Could not find info for {$package} on Packagist\n");
+			fwrite($this->stderr, "Could not find info for $package on $repository->url\n");
 			return [];
 		}
 	}

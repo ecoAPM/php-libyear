@@ -6,6 +6,7 @@ use DateTime;
 use LibYear\Calculator;
 use LibYear\ComposerFile;
 use LibYear\Dependency;
+use LibYear\Repository;
 use LibYear\RepositoryAPI;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -18,24 +19,23 @@ class CalculatorTest extends TestCase
 	public function testCanFillOutDependencyInfo()
 	{
 		//arrange
+		$repository = new Repository('https://repo.packagist.org', '/p2/%package%.json');
 		$dependency = new Dependency();
 		$dependency->name = 'vendor_name/package_name';
 		$dependency->current_version->version_number = '1.2.3';
 		$composer = Mockery::mock(ComposerFile::class, [
+			'getRepositories' => [$repository->url],
 			'getDependencies' => [$dependency]
 		]);
 
-		$repo = Mockery::mock(RepositoryAPI::class, [
+		$api = Mockery::mock(RepositoryAPI::class, [
+			'getInfo' => $repository,
 			'getPackageInfo' => [
-				'package' => [
-					'versions' => [
-						'1.2.3' => ['time' => '2018-07-01'],
-						'2.3.4' => ['time' => '2020-01-01']
-					]
-				]
+				['version' => '1.2.3', 'time' => '2018-07-01'],
+				['version' => '2.3.4', 'time' => '2020-01-01']
 			]
 		]);
-		$calculator = new Calculator($composer, $repo);
+		$calculator = new Calculator($composer, $api);
 
 		//act
 		$dependencies = $calculator->getDependencyInfo('.');
@@ -57,21 +57,18 @@ class CalculatorTest extends TestCase
 		$dependency2->name = 'vendor1/package2';
 		$dependency2->current_version->version_number = '2.3.4';
 		$composer = Mockery::mock(ComposerFile::class, [
+			'getRepositories' => [],
 			'getDependencies' => [$dependency1, $dependency2]
 		]);
 
-		$repo = Mockery::mock(RepositoryAPI::class);
-		$repo->shouldReceive('getPackageInfo')->andReturn(
+		$api = Mockery::mock(RepositoryAPI::class);
+		$api->shouldReceive('getPackageInfo')->andReturn(
 			[
-				'package' => [
-					'versions' => [
-						'1.2.4' => ['time' => '2018-07-01']
-					]
-				]
+				['version' => '1.2.4', 'time' => '2018-07-01']
 			],
 			[]
 		);
-		$calculator = new Calculator($composer, $repo);
+		$calculator = new Calculator($composer, $api);
 
 		//act
 		$dependencies = $calculator->getDependencyInfo('.');
@@ -90,18 +87,15 @@ class CalculatorTest extends TestCase
 		$dependency->name = 'vendor1/package1';
 		$dependency->current_version->version_number = '1.2.3';
 		$composer = Mockery::mock(ComposerFile::class, [
+			'getRepositories' => [],
 			'getDependencies' => [$dependency]
 		]);
 
-		$repo = Mockery::mock(RepositoryAPI::class);
-		$repo->shouldReceive('getPackageInfo')->andReturn(
-			[
-				'package' => [
-					'versions' => []
-				]
+		$api = Mockery::mock(RepositoryAPI::class, [
+				'getPackageInfo' => []
 			]
 		);
-		$calculator = new Calculator($composer, $repo);
+		$calculator = new Calculator($composer, $api);
 
 		//act
 		$dependencies = $calculator->getDependencyInfo('.');
@@ -109,6 +103,66 @@ class CalculatorTest extends TestCase
 		//assert
 		$this->assertEquals('1.2.3', $dependencies[0]->current_version->version_number);
 		$this->assertNull($dependencies[0]->current_version->released);
+	}
+
+	public function testInfoInFirstRepoSkipsSubsequentOnes()
+	{
+		//arrange
+		$dependency = new Dependency();
+		$dependency->name = 'vendor1/package1';
+		$dependency->current_version->version_number = '1.2.3';
+		$composer = Mockery::mock(ComposerFile::class, [
+			'getRepositories' => ['repo1', 'repo2'],
+			'getDependencies' => [$dependency]
+		]);
+
+		$repo1 = Mockery::mock(Repository::class);
+		$repo2 = Mockery::mock(Repository::class);
+
+		$api = Mockery::mock(RepositoryAPI::class);
+		$api->shouldReceive('getInfo')->andReturn($repo1, $repo2);
+		$api->shouldReceive('getPackageInfo')->with($dependency->name, $repo1)->andReturn([
+			['version' => '1.2.4', 'time' => '2018-07-01']
+		]);
+		$api->shouldNotReceive('getPackageInfo')->with($dependency->name, $repo2);
+
+		$calculator = new Calculator($composer, $api);
+
+		//act
+		$results = $calculator->getDependencyInfo('.');
+
+		//assert
+		$this->assertEquals('1.2.4', $results[0]->newest_version->version_number);
+	}
+
+	public function testInfoNotInFirstRepoUsesSubsequentOnes()
+	{
+//arrange
+		$dependency = new Dependency();
+		$dependency->name = 'vendor1/package1';
+		$dependency->current_version->version_number = '1.2.3';
+		$composer = Mockery::mock(ComposerFile::class, [
+			'getRepositories' => ['repo1', 'repo2'],
+			'getDependencies' => [$dependency]
+		]);
+
+		$repo1 = Mockery::mock(Repository::class);
+		$repo2 = Mockery::mock(Repository::class);
+
+		$api = Mockery::mock(RepositoryAPI::class);
+		$api->shouldReceive('getInfo')->andReturn($repo1, $repo2);
+		$api->shouldReceive('getPackageInfo')->with($dependency->name, $repo1)->andReturn([]);
+		$api->shouldReceive('getPackageInfo')->with($dependency->name, $repo2)->andReturn([
+			['version' => '1.2.4', 'time' => '2018-07-01']
+		]);
+
+		$calculator = new Calculator($composer, $api);
+
+		//act
+		$results = $calculator->getDependencyInfo('.');
+
+		//assert
+		$this->assertEquals('1.2.4', $results[0]->newest_version->version_number);
 	}
 
 	public function testCanGetTotalLibyearsBehind()
