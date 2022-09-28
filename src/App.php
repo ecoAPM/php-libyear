@@ -30,7 +30,7 @@ class App
 		$dir = $args[1] ?? '.';
 
 		$real_dir = realpath($dir);
-		fwrite($this->output, "Gathering information for {$real_dir}...\n");
+		fwrite($this->output, "Gathering information for $real_dir...\n");
 
 		$dependencies = $this->calculator->getDependencyInfo($dir);
 
@@ -58,6 +58,6 @@ class App
 		$total = Calculator::getTotalLibyearsBehind($dependencies);
 		$total_display = number_format($total, 2);
 
-		fwrite($this->output, "Total: {$total_display} libyears behind\n");
+		fwrite($this->output, "Total: $total_display libyears behind\n");
 	}
 }

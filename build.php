@@ -12,7 +12,7 @@ $files = new RegexIterator($recursive, '/^((?!tests\/).)+\.php$/', RecursiveRege
 
 foreach ($files as $file_info) {
 	$filename = str_replace(__DIR__ . DIRECTORY_SEPARATOR, '', $file_info[0]);
-	fwrite(STDOUT, "Adding {$filename}...\n");
+	fwrite(STDOUT, "Adding $filename...\n");
 	$phar->addFile($filename);
 }
 

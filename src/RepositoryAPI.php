@@ -25,11 +25,11 @@ class RepositoryAPI
 	public function getInfo(string $url): ?Repository
 	{
 		try {
-			$response = $this->http_client->request('GET', "{$url}/packages.json");
+			$response = $this->http_client->request('GET', "$url/packages.json");
 			$result = json_decode($response->getBody()->getContents(), true) ?? [];
 			return new Repository($url, $result['metadata-url']);
 		} catch (GuzzleException $e) {
-			fwrite($this->stderr, "Could not create repository for {$url}\n");
+			fwrite($this->stderr, "Could not create repository for $url\n");
 			return null;
 		}
 	}
