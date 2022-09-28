@@ -6,6 +6,12 @@ class ComposerFile
 {
 	private FileSystem $file_system;
 
+	/** @var array[] */
+	private array $json_cache;
+
+	/** @var array[] */
+	private array $lock_cache;
+
 	public function __construct(FileSystem $file_system)
 	{
 		$this->file_system = $file_system;
@@ -29,22 +35,24 @@ class ComposerFile
 
 	private function getPackageNames(string $directory): array
 	{
-		$composer_json = $this->file_system->getJSON($directory . DIRECTORY_SEPARATOR . 'composer.json');
+		$this->json_cache[$directory] ??= $this->file_system->getJSON($directory . DIRECTORY_SEPARATOR . 'composer.json');
+		$json = $this->json_cache[$directory];
 
 		return array_merge(
-			array_key_exists('require', $composer_json) ? $composer_json['require'] : [],
-			array_key_exists('require-dev', $composer_json) ? $composer_json['require-dev'] : []
+			array_key_exists('require', $json) ? $json['require'] : [],
+			array_key_exists('require-dev', $json) ? $json['require-dev'] : []
 		);
 	}
 
 	private function getInstalledVersions(string $directory): array
 	{
-		$lock_json = $this->file_system->getJSON($directory . DIRECTORY_SEPARATOR . 'composer.lock');
+		$this->lock_cache[$directory] ??= $this->file_system->getJSON($directory . DIRECTORY_SEPARATOR . 'composer.lock');
+		$json = $this->lock_cache[$directory];
 
 		$installed_versions = [];
 		$packages = array_merge(
-			array_key_exists('packages', $lock_json) ? $lock_json['packages'] : [],
-			array_key_exists('packages-dev', $lock_json) ? $lock_json['packages-dev'] : []
+			array_key_exists('packages', $json) ? $json['packages'] : [],
+			array_key_exists('packages-dev', $json) ? $json['packages-dev'] : []
 		);
 
 		foreach ($packages as $package_info) {
