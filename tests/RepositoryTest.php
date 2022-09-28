@@ -10,7 +10,7 @@ class RepositoryTest extends TestCase
 	public function testCanGetPackageMetadataURL()
 	{
 		//arrange
-		$repo = new Repository("https://composer.example.com", "/metadata/%package%.json");
+		$repo = new Repository("https://composer.example.com/packages", "/metadata/%package%.json");
 
 		//act
 		$url = $repo->getMetadataURL("ecoapm/libyear");

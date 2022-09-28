@@ -15,6 +15,8 @@ class Repository
 
 	public function getMetadataURL(string $package): string
 	{
-		return $this->url . str_replace("%package%", $package, $this->metadata_pattern);
+		$url_info = parse_url($this->url);
+		$path = str_replace("%package%", $package, $this->metadata_pattern);
+		return "{$url_info['scheme']}://{$url_info['host']}$path";
 	}
 }
