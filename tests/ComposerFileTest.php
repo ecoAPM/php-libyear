@@ -12,6 +12,66 @@ class ComposerFileTest extends TestCase
 {
 	use MockeryPHPUnitIntegration;
 
+	public function testCanGetDefaultRepositoryFromComposerFile()
+	{
+		//arrange
+		$file_system = Mockery::mock(FileSystem::class, [
+			'getJSON' => []
+		]);
+		$composer = new ComposerFile($file_system);
+
+		//act
+		$repositories = $composer->getRepositories('.');
+
+		//assert
+		$this->assertEquals(['https://repo.packagist.org'], $repositories);
+	}
+
+	public function testCanGetCustomRepositoryFromComposerFile()
+	{
+		//arrange
+		$file_system = Mockery::mock(FileSystem::class, [
+			'getJSON' => [
+				'repositories' => [
+					['url' => 'https://composer.example.com'],
+					['url' => 'https://composer.example.org']
+				]
+			]
+		]);
+		$composer = new ComposerFile($file_system);
+
+		//act
+		$repositories = $composer->getRepositories('.');
+
+		//assert
+		$expected = [
+			'https://composer.example.com',
+			'https://composer.example.org',
+			'https://repo.packagist.org'
+		];
+		$this->assertEquals($expected, $repositories);
+	}
+
+	public function testCanSkipPackagist()
+	{
+		//arrange
+		$file_system = Mockery::mock(FileSystem::class, [
+			'getJSON' => [
+				'repositories' => [
+					['url' => 'https://composer.example.com'],
+					'packagist.org' => false
+				]
+			]
+		]);
+		$composer = new ComposerFile($file_system);
+
+		//act
+		$repositories = $composer->getRepositories('.');
+
+		//assert
+		$this->assertEquals(['https://composer.example.com'], $repositories);
+	}
+
 	public function testCanGetDependenciesFromComposerFiles()
 	{
 		//arrange

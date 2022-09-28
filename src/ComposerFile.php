@@ -4,6 +4,8 @@ namespace LibYear;
 
 class ComposerFile
 {
+	const DEFAULT_URL = 'https://repo.packagist.org';
+
 	private FileSystem $file_system;
 
 	/** @var array[] */
@@ -15,6 +17,28 @@ class ComposerFile
 	public function __construct(FileSystem $file_system)
 	{
 		$this->file_system = $file_system;
+	}
+
+	/**
+	 * @param string $directory
+	 * @return string[]
+	 */
+	public function getRepositories(string $directory): array
+	{
+		$this->json_cache[$directory] ??= $this->file_system->getJSON($directory . DIRECTORY_SEPARATOR . 'composer.json');
+		$json = $this->json_cache[$directory];
+
+		$repositories = isset($json['repositories'])
+			? array_filter($json['repositories'], fn($repository) => is_array($repository) && key_exists('url', $repository))
+			: [];
+
+		$urls = array_map(fn(array $repository) => rtrim($repository['url'], '/'), $repositories);
+
+		if (!in_array(self::DEFAULT_URL, $urls) && (!isset($json['repositories']['packagist.org']) || $json['repositories']['packagist.org'] !== false)) {
+			$urls[] = self::DEFAULT_URL;
+		}
+
+		return $urls;
 	}
 
 	/**
