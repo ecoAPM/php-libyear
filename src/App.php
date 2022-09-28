@@ -8,58 +8,58 @@ use LibYear\Dependency;
 
 class App
 {
-    private Calculator $calculator;
+	private Calculator $calculator;
 
-    /** @var resource */
-    private $output;
+	/** @var resource */
+	private $output;
 
-    /**
-     * @param Calculator $calculator
-     * @param resource $output
-     */
-    public function __construct(Calculator $calculator, $output)
-    {
-        $this->calculator = $calculator;
-        $this->output = $output;
-    }
+	/**
+	 * @param Calculator $calculator
+	 * @param resource $output
+	 */
+	public function __construct(Calculator $calculator, $output)
+	{
+		$this->calculator = $calculator;
+		$this->output = $output;
+	}
 
-    /**
-     * @param string[] $args
-     */
-    public function run(array $args): void
-    {
-        $quiet_mode = in_array('-q', $args) || in_array('--quiet', $args);
-        $dir = $args[1] ?? '.';
-        
-        $real_dir = realpath($dir);
-        fwrite($this->output, "Gathering information for {$real_dir}...\n");
+	/**
+	 * @param string[] $args
+	 */
+	public function run(array $args): void
+	{
+		$quiet_mode = in_array('-q', $args) || in_array('--quiet', $args);
+		$dir = $args[1] ?? '.';
 
-        $dependencies = $this->calculator->getDependencyInfo($dir);
+		$real_dir = realpath($dir);
+		fwrite($this->output, "Gathering information for {$real_dir}...\n");
 
-        if ($quiet_mode) {
-            $dependencies = array_filter($dependencies, fn (Dependency $dependency): bool => $dependency->getLibyearsBehind() > 0);
-        }
+		$dependencies = $this->calculator->getDependencyInfo($dir);
 
-        $table = new Table(
-            ['Package', 'Current Version', 'Released', 'Newest Version', 'Released', 'Libyears Behind'],
-            array_map(fn (Dependency $dependency): array => [
-                $dependency->name,
-                $dependency->current_version->version_number,
-                isset($dependency->current_version->released) ? $dependency->current_version->released->format('Y-m-d') : null,
-                isset($dependency->newest_version->version_number) ? $dependency->newest_version->version_number : null,
-                isset($dependency->newest_version->released) ? $dependency->newest_version->released->format('Y-m-d') : null,
-                $dependency->getLibyearsBehind() !== null ? number_format($dependency->getLibyearsBehind(), 2) : null
-            ], $dependencies)
-        );
+		if ($quiet_mode) {
+			$dependencies = array_filter($dependencies, fn(Dependency $dependency): bool => $dependency->getLibyearsBehind() > 0);
+		}
 
-        $rows = $table->getDisplayLines();
-        foreach ($rows as $row) {
-            fwrite($this->output, $row . "\n");
-        }
+		$table = new Table(
+			['Package', 'Current Version', 'Released', 'Newest Version', 'Released', 'Libyears Behind'],
+			array_map(fn(Dependency $dependency): array => [
+				$dependency->name,
+				$dependency->current_version->version_number,
+				isset($dependency->current_version->released) ? $dependency->current_version->released->format('Y-m-d') : null,
+				isset($dependency->newest_version->version_number) ? $dependency->newest_version->version_number : null,
+				isset($dependency->newest_version->released) ? $dependency->newest_version->released->format('Y-m-d') : null,
+				$dependency->getLibyearsBehind() !== null ? number_format($dependency->getLibyearsBehind(), 2) : null
+			], $dependencies)
+		);
 
-        $total = Calculator::getTotalLibyearsBehind($dependencies);
-        $total_display = number_format($total, 2);
+		$rows = $table->getDisplayLines();
+		foreach ($rows as $row) {
+			fwrite($this->output, $row . "\n");
+		}
 
-        fwrite($this->output, "Total: {$total_display} libyears behind\n");
-    }
+		$total = Calculator::getTotalLibyearsBehind($dependencies);
+		$total_display = number_format($total, 2);
+
+		fwrite($this->output, "Total: {$total_display} libyears behind\n");
+	}
 }

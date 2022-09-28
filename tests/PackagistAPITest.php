@@ -12,47 +12,47 @@ use Psr\Http\Message\StreamInterface;
 
 class PackagistAPITest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
+	use MockeryPHPUnitIntegration;
 
-    public function testCallsCorrectURL()
-    {
-        //arrange
-        $http_client = Mockery::mock(ClientInterface::class, [
-            'request' => Mockery::mock(ResponseInterface::class, [
-				'getStatusCode' => 200,
-                'getBody' => Mockery::mock(StreamInterface::class, [
-                    'getContents' => json_encode(['test_field' => 'test value'])
-                ])
-            ])
-        ]);
-        $api = new PackagistAPI($http_client, STDERR);
-
-        //act
-        $package_info = $api->getPackageInfo('vendor_name/package_name');
-
-        //assert
-        $http_client->shouldHaveReceived('request')->with('GET', 'https://repo.packagist.org/packages/vendor_name/package_name.json');
-    }
-
-    public function testCanGetPackageInfo()
-    {
-        //arrange
-        $http_client = Mockery::mock(ClientInterface::class, [
-            'request' => Mockery::mock(ResponseInterface::class, [
+	public function testCallsCorrectURL()
+	{
+		//arrange
+		$http_client = Mockery::mock(ClientInterface::class, [
+			'request' => Mockery::mock(ResponseInterface::class, [
 				'getStatusCode' => 200,
 				'getBody' => Mockery::mock(StreamInterface::class, [
-                    'getContents' => json_encode(['test_field' => 'test value'])
-                ])
-            ])
-        ]);
-        $api = new PackagistAPI($http_client, STDERR);
+					'getContents' => json_encode(['test_field' => 'test value'])
+				])
+			])
+		]);
+		$api = new PackagistAPI($http_client, STDERR);
 
-        //act
-        $package_info = $api->getPackageInfo('vendor_name/package_name');
+		//act
+		$package_info = $api->getPackageInfo('vendor_name/package_name');
 
-        //assert
-        $this->assertEquals('test value', $package_info['test_field']);
-    }
+		//assert
+		$http_client->shouldHaveReceived('request')->with('GET', 'https://repo.packagist.org/packages/vendor_name/package_name.json');
+	}
+
+	public function testCanGetPackageInfo()
+	{
+		//arrange
+		$http_client = Mockery::mock(ClientInterface::class, [
+			'request' => Mockery::mock(ResponseInterface::class, [
+				'getStatusCode' => 200,
+				'getBody' => Mockery::mock(StreamInterface::class, [
+					'getContents' => json_encode(['test_field' => 'test value'])
+				])
+			])
+		]);
+		$api = new PackagistAPI($http_client, STDERR);
+
+		//act
+		$package_info = $api->getPackageInfo('vendor_name/package_name');
+
+		//assert
+		$this->assertEquals('test value', $package_info['test_field']);
+	}
 
 	public function testCanHandleBadResponse()
 	{

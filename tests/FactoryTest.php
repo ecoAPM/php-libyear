@@ -8,12 +8,12 @@ use PHPUnit\Framework\TestCase;
 
 class FactoryTest extends TestCase
 {
-    public function testCanCreateApp()
-    {
-        //act
-        $app = Factory::App();
+	public function testCanCreateApp()
+	{
+		//act
+		$app = Factory::App();
 
-        //assert
-        $this->assertInstanceOf(App::class, $app);
-    }
+		//assert
+		$this->assertInstanceOf(App::class, $app);
+	}
 }

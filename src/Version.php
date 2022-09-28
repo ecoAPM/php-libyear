@@ -6,6 +6,6 @@ use DateTime;
 
 class Version
 {
-    public string $version_number;
-    public ?DateTime $released = null;
+	public string $version_number;
+	public ?DateTime $released = null;
 }
