@@ -3,8 +3,6 @@
 namespace LibYear;
 
 use cli\Table;
-use LibYear\Calculator;
-use LibYear\Dependency;
 
 class App
 {

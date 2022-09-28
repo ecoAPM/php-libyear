@@ -3,7 +3,6 @@
 namespace LibYear;
 
 use GuzzleHttp\Client;
-use function cli\err;
 
 class Factory
 {
