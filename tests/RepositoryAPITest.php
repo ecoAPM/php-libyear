@@ -3,6 +3,8 @@
 namespace LibYear\Tests;
 
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Psr7\Request;
 use LibYear\Repository;
 use LibYear\RepositoryAPI;
 use Mockery;
@@ -26,7 +28,9 @@ class RepositoryAPITest extends TestCase
 				])
 			])
 		]);
-		$api = new RepositoryAPI($http_client, STDERR);
+
+		$output = fopen('php://memory', 'a+');
+		$api = new RepositoryAPI($http_client, $output);
 
 		//act
 		$repo = $api->getInfo('https://composer.example.com');
@@ -34,6 +38,22 @@ class RepositoryAPITest extends TestCase
 		//assert
 		$this->assertEquals('https://composer.example.com', $repo->url);
 		$this->assertEquals('/metadata/%package%.json', $repo->metadata_pattern);
+	}
+
+	public function testRepositoryIsNullOnException()
+	{
+		//arrange
+		$http_client = Mockery::mock(ClientInterface::class);
+		$http_client->shouldReceive('request')->andThrow(new ConnectException('', new Request('GET', '')));
+
+		$output = fopen('php://memory', 'a+');
+		$api = new RepositoryAPI($http_client, $output);
+
+		//act
+		$info = $api->getInfo('https://composer.example.com');
+
+		//assert
+		$this->assertNull($info);
 	}
 
 	public function testGetPackageInfoCallsCorrectURL()
@@ -52,7 +72,9 @@ class RepositoryAPITest extends TestCase
 				])
 			])
 		]);
-		$api = new RepositoryAPI($http_client, STDERR);
+
+		$output = fopen('php://memory', 'a+');
+		$api = new RepositoryAPI($http_client, $output);
 
 		//act
 		$api->getPackageInfo('vendor_name/package_name', $repo);
@@ -80,7 +102,9 @@ class RepositoryAPITest extends TestCase
 				])
 			])
 		]);
-		$api = new RepositoryAPI($http_client, STDERR);
+
+		$output = fopen('php://memory', 'a+');
+		$api = new RepositoryAPI($http_client, $output);
 
 		//act
 		$package_info = $api->getPackageInfo('vendor_name/package_name', $repo);
@@ -89,7 +113,7 @@ class RepositoryAPITest extends TestCase
 		$this->assertEquals('test value', $package_info['test_field']);
 	}
 
-	public function testCanHandleBadResponse()
+	public function testGetPackageInfoCanHandleBadResponse()
 	{
 		//arrange
 		$repo = new Repository('https://repo.packagist.org', '/packages/%package%.json');
@@ -101,7 +125,26 @@ class RepositoryAPITest extends TestCase
 				])
 			])
 		]);
-		$api = new RepositoryAPI($http_client, STDERR);
+
+		$output = fopen('php://memory', 'a+');
+		$api = new RepositoryAPI($http_client, $output);
+
+		//act
+		$package_info = $api->getPackageInfo('vendor_name/package_name', $repo);
+
+		//assert
+		$this->assertEquals([], $package_info);
+	}
+
+	public function testPackageInfoIsEmptyOnException()
+	{
+		//arrange
+		$repo = new Repository('https://repo.packagist.org', '/packages/%package%.json');
+		$http_client = Mockery::mock(ClientInterface::class);
+		$http_client->shouldReceive('request')->andThrow(new ConnectException('', new Request('GET', '')));
+
+		$output = fopen('php://memory', 'a+');
+		$api = new RepositoryAPI($http_client, $output);
 
 		//act
 		$package_info = $api->getPackageInfo('vendor_name/package_name', $repo);

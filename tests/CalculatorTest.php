@@ -66,7 +66,9 @@ class CalculatorTest extends TestCase
 			[
 				['version' => '1.2.4', 'time' => '2018-07-01']
 			],
-			[]
+			[
+				[]
+			]
 		);
 		$calculator = new Calculator($composer, $api);
 

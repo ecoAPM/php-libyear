@@ -50,10 +50,6 @@ class Calculator
 			}
 		}
 
-		if (empty($package_info)) {
-			return;
-		}
-
 		$versions = self::getVersions($package_info);
 		if (empty($versions)) {
 			return;
@@ -80,7 +76,7 @@ class Calculator
 		foreach ($releases as $release) {
 			$versions[$release['version']] = self::findReleaseDate($release);
 		}
-		return $versions;
+		return array_filter($versions);
 	}
 
 	private static function findReleaseDate(array $release): ?DateTimeImmutable
