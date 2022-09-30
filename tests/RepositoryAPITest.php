@@ -58,7 +58,8 @@ class RepositoryAPITest extends TestCase
 		$api->getPackageInfo('vendor_name/package_name', $repo);
 
 		//assert
-		$http_client->shouldHaveReceived('request')->with('GET', 'https://repo.packagist.org/packages/vendor_name/package_name.json');
+		$http_client->shouldHaveReceived('request')
+			->with('GET', 'https://repo.packagist.org/packages/vendor_name/package_name.json');
 	}
 
 	public function testCanGetPackageInfo()
@@ -96,7 +97,7 @@ class RepositoryAPITest extends TestCase
 			'request' => Mockery::mock(ResponseInterface::class, [
 				'getStatusCode' => 200,
 				'getBody' => Mockery::mock(StreamInterface::class, [
-					'getContents' => '<html>This is not valid JSON</html>'
+					'getContents' => '<html lang="en">This is not valid JSON</html>'
 				])
 			])
 		]);

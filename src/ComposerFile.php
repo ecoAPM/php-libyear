@@ -34,7 +34,9 @@ class ComposerFile
 
 		$urls = array_map(fn(array $repository) => rtrim($repository['url'], '/'), $repositories);
 
-		if (!in_array(self::DEFAULT_URL, $urls) && (!isset($json['repositories']['packagist.org']) || $json['repositories']['packagist.org'] !== false)) {
+		if (!in_array(self::DEFAULT_URL, $urls)
+			&& (!isset($json['repositories']['packagist.org'])
+				|| $json['repositories']['packagist.org'] !== false)) {
 			$urls[] = self::DEFAULT_URL;
 		}
 
@@ -86,11 +88,18 @@ class ComposerFile
 		return $installed_versions;
 	}
 
-	private static function createDependency(string $package_name, string $declared_version, array $installed_versions): Dependency
+	private static function createDependency(
+		string $package_name,
+		string $declared_version,
+		array  $installed_versions
+	): Dependency
 	{
 		$dependency = new Dependency();
 		$dependency->name = $package_name;
-		$dependency->current_version->version_number = array_key_exists($package_name, $installed_versions) ? $installed_versions[$package_name] : $declared_version;
+		$dependency->current_version->version_number = array_key_exists($package_name, $installed_versions)
+			? $installed_versions[$package_name]
+			: $declared_version;
+
 		return $dependency;
 	}
 }

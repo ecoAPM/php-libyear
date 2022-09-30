@@ -60,7 +60,11 @@ class Calculator
 		}
 
 		$sorted_versions = Semver::rsort(array_keys($versions));
-		$dependency->current_version->released = $this->getReleaseDate($sorted_versions, $versions, $dependency->current_version->version_number);
+
+		$current_version = $dependency->current_version->version_number;
+		$current_version_release_date = $this->getReleaseDate($sorted_versions, $versions, $current_version);
+		$dependency->current_version->released = $current_version_release_date;
+
 		$newest_version = $sorted_versions[0];
 		$dependency->newest_version->version_number = $newest_version;
 		$dependency->newest_version->released = $versions[$newest_version];
@@ -83,14 +87,18 @@ class Calculator
 	{
 		if (isset($release['time'])) {
 			return new DateTimeImmutable($release['time']);
-		} elseif (isset($release['extra']['drupal']['datestamp'])) {
-			return (new DateTimeImmutable())->setTimestamp($release['extra']['drupal']['datestamp']);
-		} else {
-			return null;
 		}
+
+		return isset($release['extra']['drupal']['datestamp'])
+			? (new DateTimeImmutable())->setTimestamp($release['extra']['drupal']['datestamp'])
+			: null;
 	}
 
-	private static function getReleaseDate(array $sorted_versions, array $versions, string $current_version): ?DateTimeInterface
+	private static function getReleaseDate(
+		array  $sorted_versions,
+		array  $versions,
+		string $current_version
+	): ?DateTimeInterface
 	{
 		foreach ($sorted_versions as $version_to_check) {
 			if (Semver::satisfies($version_to_check, $current_version)) {
@@ -107,6 +115,8 @@ class Calculator
 	 */
 	public static function getTotalLibyearsBehind(array $dependencies): float
 	{
-		return array_sum(array_map(fn(Dependency $dependency): float => $dependency->getLibyearsBehind() ?? 0, $dependencies));
+		return array_sum(
+			array_map(fn(Dependency $dependency): float => $dependency->getLibyearsBehind() ?? 0, $dependencies)
+		);
 	}
 }
