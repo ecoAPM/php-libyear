@@ -4,6 +4,7 @@ namespace LibYear;
 
 use Composer\Semver\Semver;
 use DateTime;
+use DateTimeInterface;
 
 class Calculator
 {
@@ -59,7 +60,7 @@ class Calculator
 		}
 
 		$sorted_versions = Semver::rsort(array_keys($versions));
-		$dependency->current_version->released = $this->findReleaseDate($sorted_versions, $versions, $dependency->current_version->version_number);
+		$dependency->current_version->released = $this->getReleaseDate($sorted_versions, $versions, $dependency->current_version->version_number);
 		$newest_version = $sorted_versions[0];
 		$dependency->newest_version->version_number = $newest_version;
 		$dependency->newest_version->released = $versions[$newest_version];
@@ -67,18 +68,29 @@ class Calculator
 
 	/**
 	 * @param array $releases
-	 * @return DateTime[]
+	 * @return DateTimeInterface[]
 	 */
 	private static function getVersions(array $releases): array
 	{
 		$versions = [];
-		foreach($releases as $release) {
-			$versions[$release['version']] = new DateTime($release['time']);
+		foreach ($releases as $release) {
+			$versions[$release['version']] = self::findReleaseDate($release);
 		}
 		return $versions;
 	}
 
-	private static function findReleaseDate(array $sorted_versions, array $versions, string $current_version): ?DateTime
+	private static function findReleaseDate(array $release): ?DateTime
+	{
+		if (isset($release['time'])) {
+			return new DateTime($release['time']);
+		} elseif (isset($release['extra']['drupal']['datestamp'])) {
+			return (new DateTime())->setTimestamp($release['extra']['drupal']['datestamp']);
+		} else {
+			return null;
+		}
+	}
+
+	private static function getReleaseDate(array $sorted_versions, array $versions, string $current_version): ?DateTimeInterface
 	{
 		foreach ($sorted_versions as $version_to_check) {
 			if (Semver::satisfies($version_to_check, $current_version)) {

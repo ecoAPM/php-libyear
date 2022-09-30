@@ -32,7 +32,7 @@ class CalculatorTest extends TestCase
 			'getInfo' => $repository,
 			'getPackageInfo' => [
 				['version' => '1.2.3', 'time' => '2018-07-01'],
-				['version' => '2.3.4', 'time' => '2020-01-01']
+				['version' => '2.3.4', 'extra' => ['drupal' => ['datestamp' => '1577836800']]]
 			]
 		]);
 		$calculator = new Calculator($composer, $api);
