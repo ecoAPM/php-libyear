@@ -2,7 +2,7 @@
 
 namespace LibYear\Tests;
 
-use DateTime;
+use DateTimeImmutable;
 use LibYear\Calculator;
 use LibYear\ComposerFile;
 use LibYear\Dependency;
@@ -42,9 +42,9 @@ class CalculatorTest extends TestCase
 
 		//assert
 		$this->assertEquals('1.2.3', $dependencies[0]->current_version->version_number);
-		$this->assertEquals(new DateTime('2018-07-01'), $dependencies[0]->current_version->released);
+		$this->assertEquals(new DateTimeImmutable('2018-07-01'), $dependencies[0]->current_version->released);
 		$this->assertEquals('2.3.4', $dependencies[0]->newest_version->version_number);
-		$this->assertEquals(new DateTime('2020-01-01'), $dependencies[0]->newest_version->released);
+		$this->assertEquals(new DateTimeImmutable('2020-01-01'), $dependencies[0]->newest_version->released);
 	}
 
 	public function testSkipsFillingOutMissingInfo()

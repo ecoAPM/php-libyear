@@ -3,7 +3,7 @@
 namespace LibYear;
 
 use Composer\Semver\Semver;
-use DateTime;
+use DateTimeImmutable;
 use DateTimeInterface;
 
 class Calculator
@@ -79,12 +79,12 @@ class Calculator
 		return $versions;
 	}
 
-	private static function findReleaseDate(array $release): ?DateTime
+	private static function findReleaseDate(array $release): ?DateTimeImmutable
 	{
 		if (isset($release['time'])) {
-			return new DateTime($release['time']);
+			return new DateTimeImmutable($release['time']);
 		} elseif (isset($release['extra']['drupal']['datestamp'])) {
-			return (new DateTime())->setTimestamp($release['extra']['drupal']['datestamp']);
+			return (new DateTimeImmutable())->setTimestamp($release['extra']['drupal']['datestamp']);
 		} else {
 			return null;
 		}

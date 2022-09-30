@@ -2,10 +2,10 @@
 
 namespace LibYear;
 
-use DateTime;
+use DateTimeInterface;
 
 class Version
 {
 	public string $version_number;
-	public ?DateTime $released = null;
+	public ?DateTimeInterface $released = null;
 }

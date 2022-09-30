@@ -2,7 +2,7 @@
 
 namespace LibYear\Tests;
 
-use DateTime;
+use DateTimeImmutable;
 use LibYear\Dependency;
 use PHPUnit\Framework\TestCase;
 
@@ -12,8 +12,8 @@ class DependencyTest extends TestCase
 	{
 		//arrange
 		$dependency = new Dependency();
-		$dependency->current_version->released = new DateTime('-18 months');
-		$dependency->newest_version->released = new DateTime('today');
+		$dependency->current_version->released = new DateTimeImmutable('-18 months');
+		$dependency->newest_version->released = new DateTimeImmutable('today');
 
 		//act
 		$libyears = $dependency->getLibyearsBehind();
@@ -26,8 +26,8 @@ class DependencyTest extends TestCase
 	{
 		//arrange
 		$dependency = new Dependency();
-		$dependency->current_version->released = new DateTime('-18 months');
-		$dependency->newest_version->released = new DateTime('-18 months');
+		$dependency->current_version->released = new DateTimeImmutable('-18 months');
+		$dependency->newest_version->released = new DateTimeImmutable('-18 months');
 
 		//act
 		$libyears = $dependency->getLibyearsBehind();
@@ -40,7 +40,7 @@ class DependencyTest extends TestCase
 	{
 		//arrange
 		$dependency = new Dependency();
-		$dependency->current_version->released = new DateTime('-18 months');
+		$dependency->current_version->released = new DateTimeImmutable('-18 months');
 
 		//act
 		$libyears = $dependency->getLibyearsBehind();
