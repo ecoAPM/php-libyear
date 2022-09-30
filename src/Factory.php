@@ -6,7 +6,7 @@ use GuzzleHttp\Client;
 
 class Factory
 {
-	public static function App(): App
+	public static function app(): App
 	{
 		$fs = new FileSystem();
 		$file = new ComposerFile($fs);

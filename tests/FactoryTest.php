@@ -11,7 +11,7 @@ class FactoryTest extends TestCase
 	public function testCanCreateApp()
 	{
 		//act
-		$app = Factory::App();
+		$app = Factory::app();
 
 		//assert
 		$this->assertInstanceOf(App::class, $app);
