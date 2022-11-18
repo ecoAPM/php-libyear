@@ -19,17 +19,18 @@ class Calculator
 
 	/**
 	 * @param string $directory
+	 * @param bool $verbose
 	 * @return Dependency[]
 	 */
-	public function getDependencyInfo(string $directory): array
+	public function getDependencyInfo(string $directory, bool $verbose): array
 	{
 		$repository_urls = $this->composer->getRepositories($directory);
-		$repositories = array_map(fn(string $url) => $this->repo_api->getInfo($url), $repository_urls);
+		$repositories = array_map(fn(string $url) => $this->repo_api->getInfo($url, $verbose), $repository_urls);
 
 		$dependencies = $this->composer->getDependencies($directory);
 
 		foreach ($dependencies as $dependency) {
-			$this->updateDependency($dependency, $repositories);
+			$this->updateDependency($dependency, $repositories, $verbose);
 		}
 
 		return $dependencies;
@@ -38,13 +39,14 @@ class Calculator
 	/**
 	 * @param Dependency $dependency
 	 * @param Repository[] $repositories
+	 * @param bool $verbose
 	 * @return void
 	 */
-	private function updateDependency(Dependency $dependency, array $repositories)
+	private function updateDependency(Dependency $dependency, array $repositories, bool $verbose)
 	{
 		$package_info = [];
 		foreach ($repositories as $repository) {
-			$package_info = $this->repo_api->getPackageInfo($dependency->name, $repository);
+			$package_info = $this->repo_api->getPackageInfo($dependency->name, $repository, $verbose);
 			if (!empty($package_info)) {
 				break;
 			}

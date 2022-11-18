@@ -37,13 +37,14 @@ Note that PHP for Windows does not include CA certificates, so you'll need to in
 
 ## Usage
 
-`vendor/bin/libyear { path to project } [-q]`
+`vendor/bin/libyear < path to project > [-q|--quiet] [-v|--verbose]`
 
-(or `php path/to/libyear.phar { path to project } [-q]` for the PHAR version)
+(or `php path/to/libyear.phar < path to project > [-q|--quiet] [-v|--verbose]` for the PHAR version)
 
 Arguments:
 - `path to project`: required, directory containing `composer.json` and `composer.lock` files
-- `-q`: optional, quiet mode will only output libraries which are not up-to-date (that is, where "Libyears Behind" > 0)
+- `-q`, `--quiet`: optional, quiet mode will only output libraries which are not up-to-date (that is, where "Libyears Behind" > 0)
+- `-v`, `--verbose`: optional, verbose mode will output processing details like when a library isn't found in a repository
 
 ## Contributing
 

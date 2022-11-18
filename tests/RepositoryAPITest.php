@@ -33,7 +33,7 @@ class RepositoryAPITest extends TestCase
 		$api = new RepositoryAPI($http_client, $output);
 
 		//act
-		$repo = $api->getInfo('https://composer.example.com');
+		$repo = $api->getInfo('https://composer.example.com', false);
 
 		//assert
 		$this->assertEquals('https://composer.example.com', $repo->url);
@@ -50,10 +50,34 @@ class RepositoryAPITest extends TestCase
 		$api = new RepositoryAPI($http_client, $output);
 
 		//act
-		$info = $api->getInfo('https://composer.example.com');
+		$info = $api->getInfo('https://composer.example.com', false);
 
 		//assert
 		$this->assertNull($info);
+
+		fseek($output, 0);
+		$console = stream_get_contents($output);
+		$this->assertEmpty($console);
+	}
+
+	public function testRepositoryDisplaysErrorInVerboseMode()
+	{
+		//arrange
+		$http_client = Mockery::mock(ClientInterface::class);
+		$http_client->shouldReceive('request')->andThrow(new ConnectException('', new Request('GET', '')));
+
+		$output = fopen('php://memory', 'a+');
+		$api = new RepositoryAPI($http_client, $output);
+
+		//act
+		$info = $api->getInfo('https://composer.example.com', true);
+
+		//assert
+		$this->assertNull($info);
+
+		fseek($output, 0);
+		$console = stream_get_contents($output);
+		$this->assertNotEmpty($console);
 	}
 
 	public function testGetPackageInfoCallsCorrectURL()
@@ -77,7 +101,7 @@ class RepositoryAPITest extends TestCase
 		$api = new RepositoryAPI($http_client, $output);
 
 		//act
-		$api->getPackageInfo('vendor_name/package_name', $repo);
+		$api->getPackageInfo('vendor_name/package_name', $repo, false);
 
 		//assert
 		$http_client->shouldHaveReceived('request')
@@ -107,7 +131,7 @@ class RepositoryAPITest extends TestCase
 		$api = new RepositoryAPI($http_client, $output);
 
 		//act
-		$package_info = $api->getPackageInfo('vendor_name/package_name', $repo);
+		$package_info = $api->getPackageInfo('vendor_name/package_name', $repo, false);
 
 		//assert
 		$this->assertEquals('test value', $package_info['test_field']);
@@ -130,7 +154,7 @@ class RepositoryAPITest extends TestCase
 		$api = new RepositoryAPI($http_client, $output);
 
 		//act
-		$package_info = $api->getPackageInfo('vendor_name/package_name', $repo);
+		$package_info = $api->getPackageInfo('vendor_name/package_name', $repo, false);
 
 		//assert
 		$this->assertEquals([], $package_info);
@@ -147,9 +171,34 @@ class RepositoryAPITest extends TestCase
 		$api = new RepositoryAPI($http_client, $output);
 
 		//act
-		$package_info = $api->getPackageInfo('vendor_name/package_name', $repo);
+		$package_info = $api->getPackageInfo('vendor_name/package_name', $repo, false);
 
 		//assert
 		$this->assertEquals([], $package_info);
+
+		fseek($output, 0);
+		$console = stream_get_contents($output);
+		$this->assertEmpty($console);
+	}
+
+	public function testPackageInfoDisplaysErrorInVerboseMode()
+	{
+		//arrange
+		$repo = new Repository('https://repo.packagist.org', '/packages/%package%.json');
+		$http_client = Mockery::mock(ClientInterface::class);
+		$http_client->shouldReceive('request')->andThrow(new ConnectException('', new Request('GET', '')));
+
+		$output = fopen('php://memory', 'a+');
+		$api = new RepositoryAPI($http_client, $output);
+
+		//act
+		$package_info = $api->getPackageInfo('vendor_name/package_name', $repo, true);
+
+		//assert
+		$this->assertEquals([], $package_info);
+
+		fseek($output, 0);
+		$console = stream_get_contents($output);
+		$this->assertNotEmpty($console);
 	}
 }

@@ -27,12 +27,14 @@ class App
 	public function run(array $args): void
 	{
 		$quiet_mode = in_array('-q', $args) || in_array('--quiet', $args);
-		$dir = $args[1] ?? '.';
+		$verbose_mode = in_array('-v', $args) || in_array('--verbose', $args);
+		$other_args = array_filter(array_slice($args, 1), fn($a) => !in_array($a, ['-q', '--quiet', '-v', '--verbose']));
+		$dir = $other_args ? array_values($other_args)[0] : '.';
 
 		$real_dir = realpath($dir);
 		fwrite($this->output, "Gathering information for $real_dir...\n");
 
-		$dependencies = $this->getDependencies($dir, $quiet_mode);
+		$dependencies = $this->getDependencies($dir, $quiet_mode, $verbose_mode);
 
 		$table = new Table(
 			['Package', 'Current Version', 'Released', 'Newest Version', 'Released', 'Libyears Behind'],
@@ -63,11 +65,12 @@ class App
 	/**
 	 * @param string $dir
 	 * @param bool $quiet_mode
+	 * @param bool $verbose_mode
 	 * @return Dependency[]
 	 */
-	private function getDependencies(string $dir, bool $quiet_mode): array
+	private function getDependencies(string $dir, bool $quiet_mode, bool $verbose_mode): array
 	{
-		$dependencies = $this->calculator->getDependencyInfo($dir);
+		$dependencies = $this->calculator->getDependencyInfo($dir, $verbose_mode);
 		return $quiet_mode
 			? array_filter($dependencies, fn(Dependency $dependency): bool => $dependency->getLibyearsBehind() > 0)
 			: $dependencies;

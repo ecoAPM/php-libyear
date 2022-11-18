@@ -38,7 +38,7 @@ class CalculatorTest extends TestCase
 		$calculator = new Calculator($composer, $api);
 
 		//act
-		$dependencies = $calculator->getDependencyInfo('.');
+		$dependencies = $calculator->getDependencyInfo('.', false);
 
 		//assert
 		$this->assertEquals('1.2.3', $dependencies[0]->current_version->version_number);
@@ -73,7 +73,7 @@ class CalculatorTest extends TestCase
 		$calculator = new Calculator($composer, $api);
 
 		//act
-		$dependencies = $calculator->getDependencyInfo('.');
+		$dependencies = $calculator->getDependencyInfo('.', false);
 
 		//assert
 		$this->assertEquals('1.2.3', $dependencies[0]->current_version->version_number);
@@ -100,7 +100,7 @@ class CalculatorTest extends TestCase
 		$calculator = new Calculator($composer, $api);
 
 		//act
-		$dependencies = $calculator->getDependencyInfo('.');
+		$dependencies = $calculator->getDependencyInfo('.', false);
 
 		//assert
 		$this->assertEquals('1.2.3', $dependencies[0]->current_version->version_number);
@@ -123,7 +123,7 @@ class CalculatorTest extends TestCase
 
 		$api = Mockery::mock(RepositoryAPI::class);
 		$api->shouldReceive('getInfo')->andReturn($repo1, $repo2);
-		$api->shouldReceive('getPackageInfo')->with($dependency->name, $repo1)->andReturn([
+		$api->shouldReceive('getPackageInfo')->with($dependency->name, $repo1, false)->andReturn([
 			['version' => '1.2.4', 'time' => '2018-07-01']
 		]);
 		$api->shouldNotReceive('getPackageInfo')->with($dependency->name, $repo2);
@@ -131,7 +131,7 @@ class CalculatorTest extends TestCase
 		$calculator = new Calculator($composer, $api);
 
 		//act
-		$results = $calculator->getDependencyInfo('.');
+		$results = $calculator->getDependencyInfo('.', false);
 
 		//assert
 		$this->assertEquals('1.2.4', $results[0]->newest_version->version_number);
@@ -153,15 +153,15 @@ class CalculatorTest extends TestCase
 
 		$api = Mockery::mock(RepositoryAPI::class);
 		$api->shouldReceive('getInfo')->andReturn($repo1, $repo2);
-		$api->shouldReceive('getPackageInfo')->with($dependency->name, $repo1)->andReturn([]);
-		$api->shouldReceive('getPackageInfo')->with($dependency->name, $repo2)->andReturn([
+		$api->shouldReceive('getPackageInfo')->with($dependency->name, $repo1, false)->andReturn([]);
+		$api->shouldReceive('getPackageInfo')->with($dependency->name, $repo2, false)->andReturn([
 			['version' => '1.2.4', 'time' => '2018-07-01']
 		]);
 
 		$calculator = new Calculator($composer, $api);
 
 		//act
-		$results = $calculator->getDependencyInfo('.');
+		$results = $calculator->getDependencyInfo('.', false);
 
 		//assert
 		$this->assertEquals('1.2.4', $results[0]->newest_version->version_number);

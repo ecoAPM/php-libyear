@@ -22,19 +22,21 @@ class RepositoryAPI
 		$this->stderr = $stderr;
 	}
 
-	public function getInfo(string $url): ?Repository
+	public function getInfo(string $url, bool $verbose): ?Repository
 	{
 		try {
 			$response = $this->http_client->request('GET', "$url/packages.json");
 			$result = json_decode($response->getBody()->getContents(), true) ?? [];
 			return new Repository($url, $result['metadata-url']);
 		} catch (GuzzleException $e) {
-			fwrite($this->stderr, "Could not create repository for $url\n");
+			if ($verbose) {
+				fwrite($this->stderr, "Could not create repository for $url\n");
+			}
 			return null;
 		}
 	}
 
-	public function getPackageInfo(string $package, Repository $repository): array
+	public function getPackageInfo(string $package, Repository $repository, bool $verbose): array
 	{
 		try {
 			$url = $repository->getMetadataURL($package);
@@ -42,7 +44,9 @@ class RepositoryAPI
 			$json = json_decode($response->getBody()->getContents(), true);
 			return $json['packages'][$package] ?? [];
 		} catch (GuzzleException $e) {
-			fwrite($this->stderr, "Could not find info for $package on $repository->url\n");
+			if ($verbose) {
+				fwrite($this->stderr, "Could not find info for $package on $repository->url\n");
+			}
 			return [];
 		}
 	}
