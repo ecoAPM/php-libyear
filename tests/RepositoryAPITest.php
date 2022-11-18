@@ -17,6 +17,11 @@ class RepositoryAPITest extends TestCase
 {
 	use MockeryPHPUnitIntegration;
 
+	private static array $params = [
+		'metadata-url' => '/packages/%package%.json',
+		'providers-url' => '/providers/%package%/%hash%.json'
+	];
+
 	public function testCanGetRepositoryInfo()
 	{
 		//arrange
@@ -24,7 +29,7 @@ class RepositoryAPITest extends TestCase
 			'request' => Mockery::mock(ResponseInterface::class, [
 				'getStatusCode' => 200,
 				'getBody' => Mockery::mock(StreamInterface::class, [
-					'getContents' => json_encode(['metadata-url' => '/metadata/%package%.json'])
+					'getContents' => json_encode(self::$params)
 				])
 			])
 		]);
@@ -37,7 +42,8 @@ class RepositoryAPITest extends TestCase
 
 		//assert
 		$this->assertEquals('https://composer.example.com', $repo->url);
-		$this->assertEquals('/metadata/%package%.json', $repo->metadata_pattern);
+		$this->assertEquals('/providers/%package%/%hash%.json', $repo->providers_pattern);
+		$this->assertEquals('/packages/%package%.json', $repo->metadata_pattern);
 	}
 
 	public function testCanGetRepositoryInfoWithoutMetadata()
@@ -106,7 +112,7 @@ class RepositoryAPITest extends TestCase
 	public function testGetPackageInfoCallsCorrectURL()
 	{
 		//arrange
-		$repo = new Repository('https://repo.packagist.org', '/packages/%package%.json');
+		$repo = new Repository('https://repo.packagist.org', self::$params);
 		$http_client = Mockery::mock(ClientInterface::class, [
 			'request' => Mockery::mock(ResponseInterface::class, [
 				'getStatusCode' => 200,
@@ -134,7 +140,7 @@ class RepositoryAPITest extends TestCase
 	public function testCanGetPackageInfo()
 	{
 		//arrange
-		$repo = new Repository('https://repo.packagist.org', '/packages/%package%.json');
+		$repo = new Repository('https://repo.packagist.org', self::$params);
 		$http_client = Mockery::mock(ClientInterface::class, [
 			'request' => Mockery::mock(ResponseInterface::class, [
 				'getStatusCode' => 200,
@@ -163,7 +169,7 @@ class RepositoryAPITest extends TestCase
 	public function testGetPackageInfoCanHandleBadResponse()
 	{
 		//arrange
-		$repo = new Repository('https://repo.packagist.org', '/packages/%package%.json');
+		$repo = new Repository('https://repo.packagist.org', self::$params);
 		$http_client = Mockery::mock(ClientInterface::class, [
 			'request' => Mockery::mock(ResponseInterface::class, [
 				'getStatusCode' => 200,
@@ -186,7 +192,7 @@ class RepositoryAPITest extends TestCase
 	public function testPackageInfoIsEmptyOnException()
 	{
 		//arrange
-		$repo = new Repository('https://repo.packagist.org', '/packages/%package%.json');
+		$repo = new Repository('https://repo.packagist.org', self::$params);
 		$http_client = Mockery::mock(ClientInterface::class);
 		$http_client->shouldReceive('request')->andThrow(new ConnectException('', new Request('GET', '')));
 
@@ -207,7 +213,7 @@ class RepositoryAPITest extends TestCase
 	public function testPackageInfoDisplaysErrorInVerboseMode()
 	{
 		//arrange
-		$repo = new Repository('https://repo.packagist.org', '/packages/%package%.json');
+		$repo = new Repository('https://repo.packagist.org', ['metadata-url' => '/packages/%package%.json']);
 		$http_client = Mockery::mock(ClientInterface::class);
 		$http_client->shouldReceive('request')->andThrow(new ConnectException('', new Request('GET', '')));
 
