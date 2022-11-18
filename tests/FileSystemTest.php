@@ -7,6 +7,30 @@ use PHPUnit\Framework\TestCase;
 
 class FileSystemTest extends TestCase
 {
+	public function testExistsWhenFileExists()
+	{
+		//arrange
+		$file_system = new FileSystem();
+
+		//act
+		$exists = $file_system->exists(__DIR__ . '/../composer.json');
+
+		//assert
+		$this->assertTrue($exists);
+	}
+
+	public function testDoesNotExistWhenFileDoesNot()
+	{
+		//arrange
+		$file_system = new FileSystem();
+
+		//act
+		$exists = $file_system->exists(__DIR__ . '/../composer2.json');
+
+		//assert
+		$this->assertFalse($exists);
+	}
+
 	public function testCanReadJSON()
 	{
 		//arrange
