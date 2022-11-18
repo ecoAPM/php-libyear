@@ -17,10 +17,15 @@ class CalculatorTest extends TestCase
 {
 	use MockeryPHPUnitIntegration;
 
+	private static array $params = [
+		'metadata-url' => '/p2/%package%.json',
+		'providers-url' => '/p/%package%/%hash%.json'
+	];
+
 	public function testCanFillOutDependencyInfo()
 	{
 		//arrange
-		$repository = new Repository('https://repo.packagist.org', '/p2/%package%.json');
+		$repository = new Repository('https://repo.packagist.org', self::$params);
 		$dependency = new Dependency('vendor_name/package_name', '1.2.3');
 		$composer = Mockery::mock(ComposerFile::class, [
 			'getRepositories' => [$repository->url],
@@ -105,7 +110,7 @@ class CalculatorTest extends TestCase
 			]
 		]);
 		$repo1 = null;
-		$repo2 = new Repository('', null);
+		$repo2 = new Repository('', []);
 		$api->shouldReceive('getInfo')->andReturn(
 			$repo1,
 			$repo2
