@@ -2,6 +2,8 @@
 
 namespace LibYear;
 
+use cli\notify\Spinner;
+use cli\Progress;
 use Composer\Semver\Semver;
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -10,11 +12,13 @@ class Calculator
 {
 	private ComposerFile $composer;
 	private RepositoryAPI $repo_api;
+	private Progress $progress;
 
-	public function __construct(ComposerFile $composer, RepositoryAPI $repo_api)
+	public function __construct(ComposerFile $composer, RepositoryAPI $repo_api, Progress $bar)
 	{
 		$this->composer = $composer;
 		$this->repo_api = $repo_api;
+		$this->progress = $bar;
 	}
 
 	/**
@@ -29,9 +33,13 @@ class Calculator
 
 		$dependencies = $this->composer->getDependencies($directory);
 
+		$this->progress->setTotal(count($dependencies));
+		$this->progress->display();
 		foreach ($dependencies as $dependency) {
 			$this->updateDependency($dependency, $repositories, $verbose);
+			$this->progress->tick();
 		}
+		$this->progress->finish();
 
 		return $dependencies;
 	}

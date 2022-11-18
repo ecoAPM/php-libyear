@@ -2,6 +2,7 @@
 
 namespace LibYear\Tests;
 
+use cli\Progress;
 use DateTimeImmutable;
 use LibYear\Calculator;
 use LibYear\ComposerFile;
@@ -35,7 +36,13 @@ class CalculatorTest extends TestCase
 				['version' => '2.3.4', 'extra' => ['drupal' => ['datestamp' => '1577836800']]]
 			]
 		]);
-		$calculator = new Calculator($composer, $api);
+		$progress = Mockery::mock(Progress::class, [
+			'setTotal' => null,
+			'display' => null,
+			'tick' => null,
+			'finish' => null
+		]);
+		$calculator = new Calculator($composer, $api, $progress);
 
 		//act
 		$dependencies = $calculator->getDependencyInfo('.', false);
@@ -70,7 +77,14 @@ class CalculatorTest extends TestCase
 				[]
 			]
 		);
-		$calculator = new Calculator($composer, $api);
+
+		$progress = Mockery::mock(Progress::class, [
+			'setTotal' => null,
+			'display' => null,
+			'tick' => null,
+			'finish' => null
+		]);
+		$calculator = new Calculator($composer, $api, $progress);
 
 		//act
 		$dependencies = $calculator->getDependencyInfo('.', false);
@@ -97,7 +111,14 @@ class CalculatorTest extends TestCase
 				'getPackageInfo' => []
 			]
 		);
-		$calculator = new Calculator($composer, $api);
+
+		$progress = Mockery::mock(Progress::class, [
+			'setTotal' => null,
+			'display' => null,
+			'tick' => null,
+			'finish' => null
+		]);
+		$calculator = new Calculator($composer, $api, $progress);
 
 		//act
 		$dependencies = $calculator->getDependencyInfo('.', false);
@@ -128,7 +149,13 @@ class CalculatorTest extends TestCase
 		]);
 		$api->shouldNotReceive('getPackageInfo')->with($dependency->name, $repo2);
 
-		$calculator = new Calculator($composer, $api);
+		$progress = Mockery::mock(Progress::class, [
+			'setTotal' => null,
+			'display' => null,
+			'tick' => null,
+			'finish' => null
+		]);
+		$calculator = new Calculator($composer, $api, $progress);
 
 		//act
 		$results = $calculator->getDependencyInfo('.', false);
@@ -158,7 +185,13 @@ class CalculatorTest extends TestCase
 			['version' => '1.2.4', 'time' => '2018-07-01']
 		]);
 
-		$calculator = new Calculator($composer, $api);
+		$progress = Mockery::mock(Progress::class, [
+			'setTotal' => null,
+			'display' => null,
+			'tick' => null,
+			'finish' => null
+		]);
+		$calculator = new Calculator($composer, $api, $progress);
 
 		//act
 		$results = $calculator->getDependencyInfo('.', false);

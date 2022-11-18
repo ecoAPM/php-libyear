@@ -2,6 +2,7 @@
 
 namespace LibYear;
 
+use cli\progress\Bar;
 use GuzzleHttp\Client;
 
 class Factory
@@ -14,7 +15,8 @@ class Factory
 		$http = new Client();
 		$api = new RepositoryAPI($http, STDERR);
 
-		$calculator = new Calculator($file, $api);
+		$progress = new Bar("Checking dependencies...", 0);
+		$calculator = new Calculator($file, $api, $progress);
 		return new App($calculator, STDOUT);
 	}
 }
