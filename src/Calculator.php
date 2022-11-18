@@ -36,7 +36,7 @@ class Calculator
 		$this->progress->setTotal(count($dependencies));
 		$this->progress->display();
 		foreach ($dependencies as $dependency) {
-			$this->updateDependency($dependency, $repositories, $verbose);
+			$this->updateDependency($dependency, array_filter($repositories), $verbose);
 			$this->progress->tick();
 		}
 		$this->progress->finish();

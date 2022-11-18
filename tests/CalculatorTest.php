@@ -96,6 +96,45 @@ class CalculatorTest extends TestCase
 		$this->assertNull($dependencies[1]->current_version->released);
 	}
 
+	public function testSkipsBadRepositories()
+	{
+		//arrange
+		$dependency = new Dependency();
+		$dependency->name = 'vendor1/package1';
+		$dependency->current_version->version_number = '1.2.3';
+		$composer = Mockery::mock(ComposerFile::class, [
+			'getRepositories' => ['repo1', 'repo2'],
+			'getDependencies' => [$dependency]
+		]);
+
+		$api = Mockery::mock(RepositoryAPI::class, [
+			'getPackageInfo' => [
+				['version' => '1.2.4', 'time' => '2018-07-01']
+			]
+		]);
+		$repo1 = null;
+		$repo2 = new Repository('', null);
+		$api->shouldReceive('getInfo')->andReturn(
+			$repo1,
+			$repo2
+		);
+
+		$progress = Mockery::mock(Progress::class, [
+			'setTotal' => null,
+			'display' => null,
+			'tick' => null,
+			'finish' => null
+		]);
+		$calculator = new Calculator($composer, $api, $progress);
+
+		//act
+		$calculator->getDependencyInfo('.', false);
+
+		//assert
+		$api->shouldNotHaveReceived('getPackageInfo', ['vendor1/package1', $repo1, false]);
+		$api->shouldHaveReceived('getPackageInfo', ['vendor1/package1', $repo2, false]);
+	}
+
 	public function testSkipsFillingOutMissingVersions()
 	{
 		//arrange
