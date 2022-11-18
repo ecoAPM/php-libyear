@@ -40,6 +40,29 @@ class RepositoryAPITest extends TestCase
 		$this->assertEquals('/metadata/%package%.json', $repo->metadata_pattern);
 	}
 
+	public function testCanGetRepositoryInfoWithoutMetadata()
+	{
+		//arrange
+		$http_client = Mockery::mock(ClientInterface::class, [
+			'request' => Mockery::mock(ResponseInterface::class, [
+				'getStatusCode' => 200,
+				'getBody' => Mockery::mock(StreamInterface::class, [
+					'getContents' => json_encode([])
+				])
+			])
+		]);
+
+		$output = fopen('php://memory', 'a+');
+		$api = new RepositoryAPI($http_client, $output);
+
+		//act
+		$repo = $api->getInfo('https://composer.example.com', false);
+
+		//assert
+		$this->assertEquals('https://composer.example.com', $repo->url);
+		$this->assertNull($repo->metadata_pattern);
+	}
+
 	public function testRepositoryIsNullOnException()
 	{
 		//arrange
