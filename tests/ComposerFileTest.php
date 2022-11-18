@@ -16,9 +16,11 @@ class ComposerFileTest extends TestCase
 	{
 		//arrange
 		$file_system = Mockery::mock(FileSystem::class, [
+			'exists' => true,
 			'getJSON' => []
 		]);
-		$composer = new ComposerFile($file_system);
+		$output = fopen('php://memory', 'a+');
+		$composer = new ComposerFile($file_system, $output);
 
 		//act
 		$repositories = $composer->getRepositories('.');
@@ -27,10 +29,30 @@ class ComposerFileTest extends TestCase
 		$this->assertEquals(['https://repo.packagist.org'], $repositories);
 	}
 
+	public function testDisplaysErrorWhenFileNotFound()
+	{
+		//arrange
+		$file_system = Mockery::mock(FileSystem::class, [
+			'exists' => false
+		]);
+		$output = fopen('php://memory', 'a+');
+		$composer = new ComposerFile($file_system, $output);
+
+		//act
+		$composer->getRepositories('.');
+
+		//assert
+		fseek($output, 0);
+		$console = stream_get_contents($output);
+		$this->assertNotEmpty($console);
+
+	}
+
 	public function testCanGetCustomRepositoryFromComposerFile()
 	{
 		//arrange
 		$file_system = Mockery::mock(FileSystem::class, [
+			'exists' => true,
 			'getJSON' => [
 				'repositories' => [
 					['url' => 'https://composer.example.com'],
@@ -38,7 +60,8 @@ class ComposerFileTest extends TestCase
 				]
 			]
 		]);
-		$composer = new ComposerFile($file_system);
+		$output = fopen('php://memory', 'a+');
+		$composer = new ComposerFile($file_system, $output);
 
 		//act
 		$repositories = $composer->getRepositories('.');
@@ -56,6 +79,7 @@ class ComposerFileTest extends TestCase
 	{
 		//arrange
 		$file_system = Mockery::mock(FileSystem::class, [
+			'exists' => true,
 			'getJSON' => [
 				'repositories' => [
 					['url' => 'https://composer.example.com'],
@@ -63,7 +87,8 @@ class ComposerFileTest extends TestCase
 				]
 			]
 		]);
-		$composer = new ComposerFile($file_system);
+		$output = fopen('php://memory', 'a+');
+		$composer = new ComposerFile($file_system, $output);
 
 		//act
 		$repositories = $composer->getRepositories('.');
@@ -76,6 +101,7 @@ class ComposerFileTest extends TestCase
 	{
 		//arrange
 		$file_system = Mockery::mock(FileSystem::class, [
+			'exists' => true,
 			'getJSON' => [
 				'require' => [
 					'vendor1/package1' => '1.2.3',
@@ -87,7 +113,8 @@ class ComposerFileTest extends TestCase
 				]
 			]
 		]);
-		$composer = new ComposerFile($file_system);
+		$output = fopen('php://memory', 'a+');
+		$composer = new ComposerFile($file_system, $output);
 
 		//act
 		$dependencies = $composer->getDependencies('.');
@@ -103,6 +130,7 @@ class ComposerFileTest extends TestCase
 	{
 		//arrange
 		$file_system = Mockery::mock(FileSystem::class, [
+			'exists' => true,
 			'getJSON' => [
 				'require' => [
 					'vendor1/package1' => '1.2.3',
@@ -111,7 +139,8 @@ class ComposerFileTest extends TestCase
 				]
 			]
 		]);
-		$composer = new ComposerFile($file_system);
+		$output = fopen('php://memory', 'a+');
+		$composer = new ComposerFile($file_system, $output);
 
 		//act
 		$dependencies = $composer->getDependencies('.');
@@ -126,13 +155,15 @@ class ComposerFileTest extends TestCase
 	{
 		//arrange
 		$file_system = Mockery::mock(FileSystem::class, [
+			'exists' => true,
 			'getJSON' => [
 				'require-dev' => [
 					'vendor3/package1' => '4.5.6'
 				]
 			]
 		]);
-		$composer = new ComposerFile($file_system);
+		$output = fopen('php://memory', 'a+');
+		$composer = new ComposerFile($file_system, $output);
 
 		//act
 		$dependencies = $composer->getDependencies('.');
@@ -144,7 +175,9 @@ class ComposerFileTest extends TestCase
 	public function testWillPullVersionFromLockFileWhenAvailable()
 	{
 		//arrange
-		$file_system = Mockery::mock(FileSystem::class);
+		$file_system = Mockery::mock(FileSystem::class, [
+			'exists' => true
+		]);
 		$file_system->shouldReceive('getJSON')->andReturn(
 			[
 				'require' => [
@@ -160,7 +193,8 @@ class ComposerFileTest extends TestCase
 				]
 			]
 		);
-		$composer = new ComposerFile($file_system);
+		$output = fopen('php://memory', 'a+');
+		$composer = new ComposerFile($file_system, $output);
 
 		//act
 		$dependencies = $composer->getDependencies('.');

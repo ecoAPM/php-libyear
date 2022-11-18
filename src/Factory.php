@@ -9,7 +9,7 @@ class Factory
 	public static function app(): App
 	{
 		$fs = new FileSystem();
-		$file = new ComposerFile($fs);
+		$file = new ComposerFile($fs, STDERR);
 
 		$http = new Client();
 		$api = new RepositoryAPI($http, STDERR);

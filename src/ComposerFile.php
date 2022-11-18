@@ -14,9 +14,13 @@ class ComposerFile
 	/** @var array[] */
 	private array $lock_cache;
 
-	public function __construct(FileSystem $file_system)
+	/** @var resource */
+	private $stderr;
+
+	public function __construct(FileSystem $file_system, $stderr)
 	{
 		$this->file_system = $file_system;
+		$this->stderr = $stderr;
 	}
 
 	/**
@@ -25,7 +29,7 @@ class ComposerFile
 	 */
 	public function getRepositories(string $directory): array
 	{
-		$this->json_cache[$directory] ??= $this->file_system->getJSON($directory . DIRECTORY_SEPARATOR . 'composer.json');
+		$this->json_cache[$directory] ??= $this->getComposerJSON($directory);
 		$json = $this->json_cache[$directory];
 
 		$repositories = isset($json['repositories'])
@@ -61,7 +65,7 @@ class ComposerFile
 
 	private function getPackageNames(string $directory): array
 	{
-		$this->json_cache[$directory] ??= $this->file_system->getJSON($directory . DIRECTORY_SEPARATOR . 'composer.json');
+		$this->json_cache[$directory] ??= $this->getComposerJSON($directory);
 		$json = $this->json_cache[$directory];
 
 		return array_merge(
@@ -72,7 +76,7 @@ class ComposerFile
 
 	private function getInstalledVersions(string $directory): array
 	{
-		$this->lock_cache[$directory] ??= $this->file_system->getJSON($directory . DIRECTORY_SEPARATOR . 'composer.lock');
+		$this->lock_cache[$directory] ??= $this->getComposerLock($directory);
 		$json = $this->lock_cache[$directory];
 
 		$installed_versions = [];
@@ -101,5 +105,24 @@ class ComposerFile
 			: $declared_version;
 
 		return $dependency;
+	}
+
+	private function getComposerJSON(string $directory): array
+	{
+		return $this->getComposerFile($directory . DIRECTORY_SEPARATOR . 'composer.json');
+	}
+
+	private function getComposerLock(string $directory): array
+	{
+		return $this->getComposerFile($directory . DIRECTORY_SEPARATOR . 'composer.lock');
+	}
+
+	private function getComposerFile(string $path): array
+	{
+		if (!$this->file_system->exists($path)) {
+			fwrite($this->stderr, "File not found at $path\n");
+			return [];
+		}
+		return $this->file_system->getJSON($path);
 	}
 }
