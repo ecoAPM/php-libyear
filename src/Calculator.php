@@ -2,7 +2,6 @@
 
 namespace LibYear;
 
-use cli\notify\Spinner;
 use cli\Progress;
 use Composer\Semver\Semver;
 use DateTimeImmutable;
@@ -36,7 +35,7 @@ class Calculator
 		$this->progress->setTotal(count($dependencies));
 		$this->progress->display();
 		foreach ($dependencies as $dependency) {
-			$this->updateDependency($dependency, array_filter($repositories), $verbose);
+			$this->updateVersionInfo($dependency, array_filter($repositories), $verbose);
 			$this->progress->tick();
 		}
 		$this->progress->finish();
@@ -50,7 +49,7 @@ class Calculator
 	 * @param bool $verbose
 	 * @return void
 	 */
-	private function updateDependency(Dependency $dependency, array $repositories, bool $verbose)
+	private function updateVersionInfo(Dependency $dependency, array $repositories, bool $verbose)
 	{
 		$package_info = [];
 		foreach ($repositories as $repository) {
