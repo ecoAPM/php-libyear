@@ -29,12 +29,14 @@ class ComposerFile
 		$json = $this->getComposerJSON($directory);
 
 		$repositories = isset($json['repositories'])
-			? array_filter($json['repositories'], fn($repository) => is_array($repository) && key_exists('url', $repository))
+			? array_filter($json['repositories'], fn ($repository) => is_array($repository) && key_exists('url', $repository))
 			: [];
 
-		$urls = array_map(fn(array $repository) => rtrim($repository['url'], '/'), $repositories);
+		$urls = array_map(fn (array $repository) => rtrim($repository['url'], '/'), $repositories);
 
-		if (!in_array(self::DEFAULT_URL, $urls) && (!isset($json['repositories']['packagist.org']) || $json['repositories']['packagist.org'] !== false)) {
+		if (!in_array(self::DEFAULT_URL, $urls)
+			&& (!isset($json['repositories']['packagist.org'])
+				|| $json['repositories']['packagist.org'] !== false)) {
 			$urls[] = self::DEFAULT_URL;
 		}
 
@@ -88,8 +90,7 @@ class ComposerFile
 		string $package_name,
 		string $declared_version,
 		array $installed_versions
-	): Dependency
-	{
+	): Dependency {
 		$version_number = array_key_exists($package_name, $installed_versions)
 			? $installed_versions[$package_name]
 			: $declared_version;
@@ -132,5 +133,31 @@ class ComposerFile
 	private static function lockPath(string $directory): string
 	{
 		return $directory . DIRECTORY_SEPARATOR . 'composer.lock';
+	}
+
+	/**
+	 * @param string $directory
+	 * @param Dependency[] $updates
+	 */
+	public function update(string $directory, array $dependencies): void
+	{
+		$json = $this->getComposerJSON($directory);
+
+		foreach ($dependencies as $dependency) {
+			if (!isset($dependency->newest_version->version_number)) {
+				continue;
+			}
+
+			if (array_key_exists('require', $json) && array_key_exists($dependency->name, $json['require'])) {
+				$json['require'][$dependency->name] = $dependency->newest_version->version_number;
+			}
+
+			if (array_key_exists('require-dev', $json) && array_key_exists($dependency->name, $json['require-dev'])) {
+				$json['require-dev'][$dependency->name] = $dependency->newest_version->version_number;
+			}
+		}
+
+		$path = self::jsonPath($directory);
+		$this->file_system->saveJSON($path, $json);
 	}
 }

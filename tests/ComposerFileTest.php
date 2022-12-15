@@ -30,6 +30,24 @@ class ComposerFileTest extends TestCase
 		$this->assertEquals(['https://repo.packagist.org'], $repositories);
 	}
 
+	public function testCachesFileSystemResponses()
+	{
+		//arrange
+		$file_system = Mockery::mock(FileSystem::class, [
+			'exists' => true,
+			'getJSON' => []
+		]);
+		$output = fopen('php://memory', 'a+');
+		$composer = new ComposerFile($file_system, $output);
+
+		//act
+		$composer->getRepositories('.');
+		$composer->getRepositories('.');
+
+		//assert
+		$file_system->shouldHaveReceived('getJSON')->once();
+	}
+
 	public function testDisplaysErrorWhenFileNotFound()
 	{
 		//arrange
@@ -201,5 +219,50 @@ class ComposerFileTest extends TestCase
 
 		//assert
 		$this->assertEquals('1.2.3', $dependencies['vendor_name/package_name']->current_version->version_number);
+	}
+
+	public function testCanUpdateFile()
+	{
+		//arrange
+		$file_system = Mockery::mock(FileSystem::class, [
+			'exists' => true,
+			'getJSON' => [
+				'require' => [
+					'dep1' => '1.2.3',
+					'dep2' => '2.3.4'
+				],
+				'require-dev' => [
+					'dep3' => '3.4.5',
+					'dep4' => '4.5.6'
+				]
+			],
+			'saveJSON' => null
+		]);
+		$output = fopen('php://memory', 'a+');
+		$composer = new ComposerFile($file_system, $output);
+
+		$dep1 = new Dependency('dep1', '1.2.3');
+		$dep1->newest_version->version_number = '1.2.3';
+		$dep2 = new Dependency('dep2', '2.3.4');
+		$dep2->newest_version->version_number = '2.3.5';
+		$dep3 = new Dependency('dep3', '3.4.5');
+		$dep3->newest_version->version_number = '3.4.6';
+		$dep4 = new Dependency('dep4', '4.5.6');
+		$dependencies = [$dep1, $dep2, $dep3, $dep4];
+
+		//act
+		$composer->update('.', $dependencies);
+
+		//assert
+		$file_system->shouldHaveReceived('saveJSON')->with('./composer.json', [
+			'require' => [
+				'dep1' => '1.2.3',
+				'dep2' => '2.3.5'
+			],
+			'require-dev' => [
+				'dep3' => '3.4.6',
+				'dep4' => '4.5.6'
+			]
+		]);
 	}
 }
