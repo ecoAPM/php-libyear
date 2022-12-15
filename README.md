@@ -37,14 +37,18 @@ Note that PHP for Windows does not include CA certificates, so you'll need to in
 
 ## Usage
 
-`vendor/bin/libyear < path to project > [-q|--quiet] [-v|--verbose]`
+`vendor/bin/libyear <path> [-q|--quiet] [-v|--verbose]`
 
-(or `php path/to/libyear.phar < path to project > [-q|--quiet] [-v|--verbose]` for the PHAR version)
+(or `php path/to/libyear.phar <path> [-q|--quiet] [-v|--verbose]` for the PHAR version)
 
 Arguments:
-- `path to project`: required, directory containing `composer.json` and `composer.lock` files
-- `-q`, `--quiet`: optional, quiet mode will only output libraries which are not up-to-date (that is, where "Libyears Behind" > 0)
-- `-v`, `--verbose`: optional, verbose mode will output processing details like when a library isn't found in a repository
+- `path`: required, directory containing `composer.json` and `composer.lock` files
+
+Options:
+- `-h`, `--help`: show help text and exit without checking dependencies
+- `-q`, `--quiet`: quiet mode will only output libraries which are not up-to-date (that is, where "Libyears Behind" > 0)
+- `-u`, `--update`: update mode will write the latest version info to your `composer.json` file (note that you'll still need to run `composer update` to actually update your local dependencies)
+- `-v`, `--verbose`: verbose mode will output processing details like when a library isn't found in a repository
 
 ## Contributing
 

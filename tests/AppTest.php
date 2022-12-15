@@ -32,7 +32,24 @@ class AppTest extends TestCase
 		]);
 	}
 
-	public function testShowsAllDependenciesByDefaut()
+	public function testCanDisplayHelpText()
+	{
+		//arrange
+		$composer = Mockery::mock(ComposerFile::class);
+		$output = fopen('php://memory', 'a+');
+		$app = new App(self::calculator(), $composer, $output);
+
+		//act
+		$app->run(['libyear', '--help']);
+
+		//assert
+		fseek($output, 0);
+		$console = stream_get_contents($output);
+		$this->assertStringContainsString('Arguments:', $console);
+		$this->assertStringContainsString('Options:', $console);
+	}
+
+	public function testShowsAllDependenciesByDefault()
 	{
 		//arrange
 		$composer = Mockery::mock(ComposerFile::class);
