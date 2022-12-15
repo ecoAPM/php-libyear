@@ -90,13 +90,11 @@ class ComposerFile
 		array $installed_versions
 	): Dependency
 	{
-		$dependency = new Dependency();
-		$dependency->name = $package_name;
-		$dependency->current_version->version_number = array_key_exists($package_name, $installed_versions)
+		$version_number = array_key_exists($package_name, $installed_versions)
 			? $installed_versions[$package_name]
 			: $declared_version;
 
-		return $dependency;
+		return new Dependency($package_name, $version_number);
 	}
 
 	private function getComposerJSON(string $directory): array

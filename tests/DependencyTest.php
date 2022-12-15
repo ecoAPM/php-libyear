@@ -11,7 +11,7 @@ class DependencyTest extends TestCase
 	public function testCanGetTotalLibyearsBehind()
 	{
 		//arrange
-		$dependency = new Dependency();
+		$dependency = new Dependency('test', '1.2.3');
 		$dependency->current_version->released = new DateTimeImmutable('-18 months');
 		$dependency->newest_version->released = new DateTimeImmutable('today');
 
@@ -25,7 +25,7 @@ class DependencyTest extends TestCase
 	public function testLibyearsIsZeroWhenOnNewestVersion()
 	{
 		//arrange
-		$dependency = new Dependency();
+		$dependency = new Dependency('test', '1.2.3');
 		$dependency->current_version->released = new DateTimeImmutable('-18 months');
 		$dependency->newest_version->released = new DateTimeImmutable('-18 months');
 
@@ -39,7 +39,7 @@ class DependencyTest extends TestCase
 	public function testCanGetNoNewestVersion()
 	{
 		//arrange
-		$dependency = new Dependency();
+		$dependency = new Dependency('test', '1.2.3');
 		$dependency->current_version->released = new DateTimeImmutable('-18 months');
 
 		//act

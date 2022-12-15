@@ -21,9 +21,7 @@ class CalculatorTest extends TestCase
 	{
 		//arrange
 		$repository = new Repository('https://repo.packagist.org', '/p2/%package%.json');
-		$dependency = new Dependency();
-		$dependency->name = 'vendor_name/package_name';
-		$dependency->current_version->version_number = '1.2.3';
+		$dependency = new Dependency('vendor_name/package_name', '1.2.3');
 		$composer = Mockery::mock(ComposerFile::class, [
 			'getRepositories' => [$repository->url],
 			'getDependencies' => [$dependency]
@@ -57,12 +55,8 @@ class CalculatorTest extends TestCase
 	public function testSkipsFillingOutMissingInfo()
 	{
 		//arrange
-		$dependency1 = new Dependency();
-		$dependency1->name = 'vendor1/package1';
-		$dependency1->current_version->version_number = '1.2.3';
-		$dependency2 = new Dependency();
-		$dependency2->name = 'vendor1/package2';
-		$dependency2->current_version->version_number = '2.3.4';
+		$dependency1 = new Dependency('vendor1/package1', '1.2.3');
+		$dependency2 = new Dependency('vendor1/package2', '2.3.4');
 		$composer = Mockery::mock(ComposerFile::class, [
 			'getRepositories' => [],
 			'getDependencies' => [$dependency1, $dependency2]
@@ -99,9 +93,7 @@ class CalculatorTest extends TestCase
 	public function testSkipsBadRepositories()
 	{
 		//arrange
-		$dependency = new Dependency();
-		$dependency->name = 'vendor1/package1';
-		$dependency->current_version->version_number = '1.2.3';
+		$dependency = new Dependency('vendor1/package1', '1.2.3');
 		$composer = Mockery::mock(ComposerFile::class, [
 			'getRepositories' => ['repo1', 'repo2'],
 			'getDependencies' => [$dependency]
@@ -138,9 +130,7 @@ class CalculatorTest extends TestCase
 	public function testSkipsFillingOutMissingVersions()
 	{
 		//arrange
-		$dependency = new Dependency();
-		$dependency->name = 'vendor1/package1';
-		$dependency->current_version->version_number = '1.2.3';
+		$dependency = new Dependency('vendor1/package1', '1.2.3');
 		$composer = Mockery::mock(ComposerFile::class, [
 			'getRepositories' => [],
 			'getDependencies' => [$dependency]
@@ -170,9 +160,7 @@ class CalculatorTest extends TestCase
 	public function testInfoInFirstRepoSkipsSubsequentOnes()
 	{
 		//arrange
-		$dependency = new Dependency();
-		$dependency->name = 'vendor1/package1';
-		$dependency->current_version->version_number = '1.2.3';
+		$dependency = new Dependency('vendor1/package1', '1.2.3');
 		$composer = Mockery::mock(ComposerFile::class, [
 			'getRepositories' => ['repo1', 'repo2'],
 			'getDependencies' => [$dependency]
@@ -206,9 +194,7 @@ class CalculatorTest extends TestCase
 	public function testInfoNotInFirstRepoUsesSubsequentOnes()
 	{
 //arrange
-		$dependency = new Dependency();
-		$dependency->name = 'vendor1/package1';
-		$dependency->current_version->version_number = '1.2.3';
+		$dependency = new Dependency('vendor1/package1', '1.2.3');
 		$composer = Mockery::mock(ComposerFile::class, [
 			'getRepositories' => ['repo1', 'repo2'],
 			'getDependencies' => [$dependency]

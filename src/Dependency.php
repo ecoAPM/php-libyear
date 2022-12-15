@@ -8,9 +8,11 @@ class Dependency
 	public Version $current_version;
 	public Version $newest_version;
 
-	public function __construct()
+	public function __construct(string $name, string $current_version)
 	{
+		$this->name = $name;
 		$this->current_version = new Version();
+		$this->current_version->version_number = $current_version;
 		$this->newest_version = new Version();
 	}
 

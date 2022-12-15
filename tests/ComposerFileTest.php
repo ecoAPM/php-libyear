@@ -3,6 +3,7 @@
 namespace LibYear\Tests;
 
 use LibYear\ComposerFile;
+use LibYear\Dependency;
 use LibYear\FileSystem;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -45,7 +46,6 @@ class ComposerFileTest extends TestCase
 		fseek($output, 0);
 		$console = stream_get_contents($output);
 		$this->assertNotEmpty($console);
-
 	}
 
 	public function testCanGetCustomRepositoryFromComposerFile()

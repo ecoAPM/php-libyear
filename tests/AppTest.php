@@ -18,21 +18,13 @@ class AppTest extends TestCase
 
 	public function setUp(): void
 	{
-		$dep1 = new Dependency();
-		$dep1->name = 'Test 1';
-		$dep1->current_version = new Version();
-		$dep1->current_version->version_number = '1.0.0';
+		$dep1 = new Dependency('Test 1', '1.0.0');
 		$dep1->current_version->released = new DateTimeImmutable('2020-01-01');
-		$dep1->newest_version = new Version();
 		$dep1->newest_version->version_number = '1.0.0';
 		$dep1->newest_version->released = new DateTimeImmutable('2020-01-01');
 
-		$dep2 = new Dependency();
-		$dep2->name = 'Test 2';
-		$dep2->current_version = new Version();
-		$dep2->current_version->version_number = '1.0.0';
+		$dep2 = new Dependency('Test 2', '1.0.0');
 		$dep2->current_version->released = new DateTimeImmutable('2020-01-01');
-		$dep2->newest_version = new Version();
 		$dep2->newest_version->version_number = '2.0.0';
 		$dep2->newest_version->released = new DateTimeImmutable('2021-01-01');
 
