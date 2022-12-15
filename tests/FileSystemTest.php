@@ -42,4 +42,22 @@ class FileSystemTest extends TestCase
 		//assert
 		$this->assertStringContainsString('libyear', $composer_json['name']);
 	}
+
+	public function testCanSaveJSON()
+	{
+		//arrange
+		$file_system = new FileSystem();
+		$path = __DIR__ . '/test.json';
+
+		//act
+		$file_system->saveJSON($path, ['key' => 'val']);
+
+		//assert
+		$json = file_get_contents($path);
+		unlink($path);
+		$expected = '{' . PHP_EOL
+			. '    "key": "val"' . PHP_EOL
+			. '}';
+		$this->assertEquals($expected, $json);
+	}
 }
