@@ -9,10 +9,7 @@ class ComposerFile
 	private FileSystem $file_system;
 
 	/** @var array[] */
-	private array $json_cache;
-
-	/** @var array[] */
-	private array $lock_cache;
+	private array $cache = [];
 
 	/** @var resource */
 	private $stderr;
@@ -29,8 +26,7 @@ class ComposerFile
 	 */
 	public function getRepositories(string $directory): array
 	{
-		$this->json_cache[$directory] ??= $this->getComposerJSON($directory);
-		$json = $this->json_cache[$directory];
+		$json = $this->getComposerJSON($directory);
 
 		$repositories = isset($json['repositories'])
 			? array_filter($json['repositories'], fn($repository) => is_array($repository) && key_exists('url', $repository))
@@ -38,9 +34,7 @@ class ComposerFile
 
 		$urls = array_map(fn(array $repository) => rtrim($repository['url'], '/'), $repositories);
 
-		if (!in_array(self::DEFAULT_URL, $urls)
-			&& (!isset($json['repositories']['packagist.org'])
-				|| $json['repositories']['packagist.org'] !== false)) {
+		if (!in_array(self::DEFAULT_URL, $urls) && (!isset($json['repositories']['packagist.org']) || $json['repositories']['packagist.org'] !== false)) {
 			$urls[] = self::DEFAULT_URL;
 		}
 
@@ -65,8 +59,7 @@ class ComposerFile
 
 	private function getPackageNames(string $directory): array
 	{
-		$this->json_cache[$directory] ??= $this->getComposerJSON($directory);
-		$json = $this->json_cache[$directory];
+		$json = $this->getComposerJSON($directory);
 
 		return array_merge(
 			array_key_exists('require', $json) ? $json['require'] : [],
@@ -76,8 +69,7 @@ class ComposerFile
 
 	private function getInstalledVersions(string $directory): array
 	{
-		$this->lock_cache[$directory] ??= $this->getComposerLock($directory);
-		$json = $this->lock_cache[$directory];
+		$json = $this->getComposerLock($directory);
 
 		$installed_versions = [];
 		$packages = array_merge(
@@ -95,7 +87,7 @@ class ComposerFile
 	private static function createDependency(
 		string $package_name,
 		string $declared_version,
-		array  $installed_versions
+		array $installed_versions
 	): Dependency
 	{
 		$dependency = new Dependency();
@@ -109,20 +101,38 @@ class ComposerFile
 
 	private function getComposerJSON(string $directory): array
 	{
-		return $this->getComposerFile($directory . DIRECTORY_SEPARATOR . 'composer.json');
+		$path = self::jsonPath($directory);
+		return $this->getComposerFile($path);
 	}
 
 	private function getComposerLock(string $directory): array
 	{
-		return $this->getComposerFile($directory . DIRECTORY_SEPARATOR . 'composer.lock');
+		$path = self::lockPath($directory);
+		return $this->getComposerFile($path);
 	}
 
 	private function getComposerFile(string $path): array
 	{
+		if (array_key_exists($path, $this->cache)) {
+			return $this->cache[$path];
+		}
+
 		if (!$this->file_system->exists($path)) {
 			fwrite($this->stderr, "File not found at $path\n");
 			return [];
 		}
-		return $this->file_system->getJSON($path);
+
+		$this->cache[$path] = $this->file_system->getJSON($path);
+		return $this->cache[$path];
+	}
+
+	private static function jsonPath(string $directory): string
+	{
+		return $directory . DIRECTORY_SEPARATOR . 'composer.json';
+	}
+
+	private static function lockPath(string $directory): string
+	{
+		return $directory . DIRECTORY_SEPARATOR . 'composer.lock';
 	}
 }
