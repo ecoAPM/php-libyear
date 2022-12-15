@@ -17,6 +17,6 @@ class Factory
 
 		$progress = new Bar("Checking dependencies...", 0);
 		$calculator = new Calculator($file, $api, $progress);
-		return new App($calculator, STDOUT);
+		return new App($calculator, $file, STDOUT);
 	}
 }

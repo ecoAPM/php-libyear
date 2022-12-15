@@ -7,17 +7,20 @@ use cli\Table;
 class App
 {
 	private Calculator $calculator;
+	private ComposerFile $composer;
 
 	/** @var resource */
 	private $output;
 
 	/**
 	 * @param Calculator $calculator
+	 * @param ComposerFile $composer
 	 * @param resource $output
 	 */
-	public function __construct(Calculator $calculator, $output)
+	public function __construct(Calculator $calculator, ComposerFile $composer, $output)
 	{
 		$this->calculator = $calculator;
+		$this->composer = $composer;
 		$this->output = $output;
 	}
 
@@ -27,8 +30,9 @@ class App
 	public function run(array $args): void
 	{
 		$quiet_mode = in_array('-q', $args) || in_array('--quiet', $args);
+		$update_mode = in_array('-u', $args) || in_array('--update', $args);
 		$verbose_mode = in_array('-v', $args) || in_array('--verbose', $args);
-		$other_args = array_filter(array_slice($args, 1), fn($a) => !in_array($a, ['-q', '--quiet', '-v', '--verbose']));
+		$other_args = array_filter(array_slice($args, 1), fn ($a) => !in_array($a, ['-q', '--quiet', '-u', '--update', '-v', '--verbose']));
 		$dir = $other_args ? array_values($other_args)[0] : '.';
 
 		$real_dir = realpath($dir);
@@ -39,27 +43,34 @@ class App
 		$table = new Table(
 			['Package', 'Current Version', 'Released', 'Newest Version', 'Released', 'Libyears Behind'],
 			array_map(
-				fn(Dependency $dependency): array => [
+				fn (Dependency $dependency): array => [
 					$dependency->name,
 					$dependency->current_version->version_number,
 					isset($dependency->current_version->released) ? $dependency->current_version->released->format('Y-m-d') : "",
 					isset($dependency->newest_version->version_number) ? $dependency->newest_version->version_number : "",
 					isset($dependency->newest_version->released) ? $dependency->newest_version->released->format('Y-m-d') : "",
 					$dependency->getLibyearsBehind() !== null ? number_format($dependency->getLibyearsBehind(), 2) : ""
-				]
-				, $dependencies
+				],
+				$dependencies
 			)
 		);
 
-		$rows = $table->getDisplayLines();
-		foreach ($rows as $row) {
-			fwrite($this->output, $row . "\n");
+		if (!empty($dependencies)) {
+			$rows = $table->getDisplayLines();
+			foreach ($rows as $row) {
+				fwrite($this->output, $row . "\n");
+			}
 		}
 
 		$total = Calculator::getTotalLibyearsBehind($dependencies);
 		$total_display = number_format($total, 2);
 
 		fwrite($this->output, "Total: $total_display libyears behind\n");
+
+		if ($update_mode) {
+			$this->composer->update($dir, $dependencies);
+			fwrite($this->output, "composer.json updated\n");
+		}
 	}
 
 	/**
@@ -72,7 +83,7 @@ class App
 	{
 		$dependencies = $this->calculator->getDependencyInfo($dir, $verbose_mode);
 		return $quiet_mode
-			? array_filter($dependencies, fn(Dependency $dependency): bool => $dependency->getLibyearsBehind() > 0)
+			? array_filter($dependencies, fn (Dependency $dependency): bool => $dependency->getLibyearsBehind() > 0)
 			: $dependencies;
 	}
 }

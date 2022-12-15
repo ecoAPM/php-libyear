@@ -5,18 +5,17 @@ namespace LibYear\Tests;
 use DateTimeImmutable;
 use LibYear\App;
 use LibYear\Calculator;
+use LibYear\ComposerFile;
 use LibYear\Dependency;
-use LibYear\Version;
 use Mockery;
-use Mockery\MockInterface;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
 class AppTest extends TestCase
 {
-	/** @var Calculator|MockInterface */
-	private Calculator $calculator;
+	use MockeryPHPUnitIntegration;
 
-	public function setUp(): void
+	private static function calculator(): Calculator
 	{
 		$dep1 = new Dependency('Test 1', '1.0.0');
 		$dep1->current_version->released = new DateTimeImmutable('2020-01-01');
@@ -28,7 +27,7 @@ class AppTest extends TestCase
 		$dep2->newest_version->version_number = '2.0.0';
 		$dep2->newest_version->released = new DateTimeImmutable('2021-01-01');
 
-		$this->calculator = Mockery::mock(Calculator::class, [
+		return Mockery::mock(Calculator::class, [
 			'getDependencyInfo' => [$dep1, $dep2]
 		]);
 	}
@@ -36,8 +35,9 @@ class AppTest extends TestCase
 	public function testShowsAllDependenciesByDefaut()
 	{
 		//arrange
+		$composer = Mockery::mock(ComposerFile::class);
 		$output = fopen('php://memory', 'a+');
-		$app = new App($this->calculator, $output);
+		$app = new App(self::calculator(), $composer, $output);
 
 		//act
 		$app->run(['libyear', '.']);
@@ -52,8 +52,9 @@ class AppTest extends TestCase
 	public function testQuietModeOnlyShowsOutdated()
 	{
 		//arrange
+		$composer = Mockery::mock(ComposerFile::class);
 		$output = fopen('php://memory', 'a+');
-		$app = new App($this->calculator, $output);
+		$app = new App(self::calculator(), $composer, $output);
 
 		//act
 		$app->run(['libyear', '.', '-q']);
@@ -63,5 +64,36 @@ class AppTest extends TestCase
 		$console = stream_get_contents($output);
 		$this->assertStringContainsString('Test 2', $console);
 		$this->assertStringNotContainsString('Test 1', $console);
+	}
+
+	public function testUpdatesComposerIfFlagSet()
+	{
+		//arrange
+		$composer = Mockery::mock(ComposerFile::class, [
+			'update' => null
+		]);
+		$output = fopen('php://memory', 'a+');
+		$app = new App(self::calculator(), $composer, $output);
+
+		//act
+		$app->run(['libyear', '.', '-u']);
+
+		//assert
+		$composer->shouldHaveReceived('update');
+	}
+
+	public function testDoesNotUpdateComposerIfFlagNotSet()
+	{
+
+		//arrange
+		$composer = Mockery::mock(ComposerFile::class);
+		$output = fopen('php://memory', 'a+');
+		$app = new App(self::calculator(), $composer, $output);
+
+		//act
+		$app->run(['libyear', '.']);
+
+		//assert
+		$composer->shouldNotHaveReceived('update');
 	}
 }
