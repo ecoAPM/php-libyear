@@ -20,10 +20,10 @@
 	"ext-json": ">=7.4",
 	"composer/semver": "3.3.2",
 	"guzzlehttp/guzzle": "7.5.0",
-	"wp-cli/php-cli-tools": "0.11.16"
+	"wp-cli/php-cli-tools": "0.11.17"
   },
   "require-dev": {
-	"phpunit/phpunit": "9.5.27",
+	"phpunit/phpunit": "9.6.3",
 	"mockery/mockery": "1.5.1"
   },
   "autoload": {
