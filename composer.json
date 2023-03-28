@@ -23,7 +23,7 @@
 	"wp-cli/php-cli-tools": "0.11.17"
   },
   "require-dev": {
-	"phpunit/phpunit": "9.6.5",
+	"phpunit/phpunit": "9.6.6",
 	"mockery/mockery": "1.5.1"
   },
   "autoload": {
