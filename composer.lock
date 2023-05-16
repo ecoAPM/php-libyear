@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f7047aa848120acd266035bec5528f3c",
+    "content-hash": "54282b49c91e3f1fee40cde394d4e1e0",
     "packages": [
         {
             "name": "composer/semver",
@@ -89,16 +89,16 @@
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "7.6.0",
+            "version": "7.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "733dd89533dd371a0987172727df15f500dab0ef"
+                "reference": "8444a2bacf1960bc6a2b62ed86b8e72e11eebe51"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/733dd89533dd371a0987172727df15f500dab0ef",
-                "reference": "733dd89533dd371a0987172727df15f500dab0ef",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/8444a2bacf1960bc6a2b62ed86b8e72e11eebe51",
+                "reference": "8444a2bacf1960bc6a2b62ed86b8e72e11eebe51",
                 "shasum": ""
             },
             "require": {
@@ -194,7 +194,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/guzzle/issues",
-                "source": "https://github.com/guzzle/guzzle/tree/7.6.0"
+                "source": "https://github.com/guzzle/guzzle/tree/7.6.1"
             },
             "funding": [
                 {
@@ -210,7 +210,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-05-14T11:23:39+00:00"
+            "time": "2023-05-15T20:43:01+00:00"
         },
         {
             "name": "guzzlehttp/promises",
