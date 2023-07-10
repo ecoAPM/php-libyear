@@ -17,6 +17,10 @@ Calculates the total number of years behind their respective newest versions for
 - PHP v7.4 or later
 - Composer v2
 
+Note that 2.3.0 is the last release that will support PHP 7.4 and 8.0; v3 (expected Q3 2023) will only support PHP 8.1+.
+
+Ongoing commercial support for legacy versions of PHP is available for [Corporate, Premier, and Title Sponsors](https://github.com/sponsors/ecoAPM).
+
 ## Installation
 
 ### Recommended: Composer

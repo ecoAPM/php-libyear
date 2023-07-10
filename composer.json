@@ -1,6 +1,6 @@
 {
   "name": "ecoapm/libyear",
-  "version": "2.3.0",
+  "version": "3.0.0",
   "description": "A simple measure of software dependency freshness",
   "homepage": "https://libyear.com",
   "readme": "README.md",
@@ -16,20 +16,20 @@
 	"libyear"
   ],
   "require": {
-	"php": ">=7.4",
-	"ext-json": ">=7.4",
+	"php": ">=8.1",
+	"ext-json": ">=8.1",
 	"composer/semver": "3.3.2",
 	"guzzlehttp/guzzle": "7.7.0",
 	"wp-cli/php-cli-tools": "0.11.18"
   },
   "require-dev": {
-	"phpunit/phpunit": "9.6.10",
+	"phpunit/phpunit": "10.2.3",
 	"mockery/mockery": "1.6.2"
   },
   "autoload": {
 	"psr-4": {
-	  "LibYear\\": "src/",
-	  "LibYear\\Tests\\": "tests/"
+	  "ecoAPM\\LibYear\\": "src/",
+	  "ecoAPM\\LibYear\\Tests\\": "tests/"
 	}
   }
 }

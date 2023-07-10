@@ -1,10 +1,10 @@
 <?php
 
-namespace LibYear\Tests;
+namespace ecoAPM\LibYear\Tests;
 
-use LibYear\ComposerFile;
-use LibYear\Dependency;
-use LibYear\FileSystem;
+use ecoAPM\LibYear\ComposerFile;
+use ecoAPM\LibYear\Dependency;
+use ecoAPM\LibYear\FileSystem;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -254,7 +254,7 @@ class ComposerFileTest extends TestCase
 		$composer->update('.', $dependencies);
 
 		//assert
-		$file_system->shouldHaveReceived('saveJSON')->with('./composer.json', [
+		$file_system->shouldHaveReceived('saveJSON')->with('.' . DIRECTORY_SEPARATOR . 'composer.json', [
 			'require' => [
 				'dep1' => '1.2.3',
 				'dep2' => '2.3.5'

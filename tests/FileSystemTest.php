@@ -1,8 +1,8 @@
 <?php
 
-namespace LibYear\Tests;
+namespace ecoAPM\LibYear\Tests;
 
-use LibYear\FileSystem;
+use ecoAPM\LibYear\FileSystem;
 use PHPUnit\Framework\TestCase;
 
 class FileSystemTest extends TestCase
@@ -55,8 +55,8 @@ class FileSystemTest extends TestCase
 		//assert
 		$json = file_get_contents($path);
 		unlink($path);
-		$expected = '{' . PHP_EOL
-			. '    "key": "val"' . PHP_EOL
+		$expected = "{\n"
+			. "    \"key\": \"val\"\n"
 			. '}';
 		$this->assertEquals($expected, $json);
 	}

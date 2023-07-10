@@ -1,9 +1,9 @@
 <?php
 
-namespace LibYear\Tests;
+namespace ecoAPM\LibYear\Tests;
 
 use DateTimeImmutable;
-use LibYear\Dependency;
+use ecoAPM\LibYear\Dependency;
 use PHPUnit\Framework\TestCase;
 
 class DependencyTest extends TestCase

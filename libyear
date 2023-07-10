@@ -2,7 +2,7 @@
 
 <?php
 
-use LibYear\Factory;
+use ecoAPM\LibYear\Factory;
 
 const vendor_indicator = 'vendor' . DIRECTORY_SEPARATOR . 'ecoapm' . DIRECTORY_SEPARATOR . 'libyear';
 $is_vendored = strpos(__DIR__, vendor_indicator) === strlen(__DIR__) - strlen(vendor_indicator);

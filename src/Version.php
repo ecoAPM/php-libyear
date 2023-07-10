@@ -1,6 +1,6 @@
 <?php
 
-namespace LibYear;
+namespace ecoAPM\LibYear;
 
 use DateTimeInterface;
 

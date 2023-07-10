@@ -1,6 +1,6 @@
 <?php
 
-namespace LibYear;
+namespace ecoAPM\LibYear;
 
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;

@@ -1,12 +1,12 @@
 <?php
 
-namespace LibYear\Tests;
+namespace ecoAPM\LibYear\Tests;
 
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Psr7\Request;
-use LibYear\Repository;
-use LibYear\RepositoryAPI;
+use ecoAPM\LibYear\Repository;
+use ecoAPM\LibYear\RepositoryAPI;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;

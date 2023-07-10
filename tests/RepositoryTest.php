@@ -1,8 +1,8 @@
 <?php
 
-namespace LibYear\Tests;
+namespace ecoAPM\LibYear\Tests;
 
-use LibYear\Repository;
+use ecoAPM\LibYear\Repository;
 use PHPUnit\Framework\TestCase;
 
 class RepositoryTest extends TestCase

@@ -1,9 +1,9 @@
 <?php
 
-namespace LibYear\Tests;
+namespace ecoAPM\LibYear\Tests;
 
-use LibYear\App;
-use LibYear\Factory;
+use ecoAPM\LibYear\App;
+use ecoAPM\LibYear\Factory;
 use PHPUnit\Framework\TestCase;
 
 class FactoryTest extends TestCase

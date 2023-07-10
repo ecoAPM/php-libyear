@@ -1,14 +1,14 @@
 <?php
 
-namespace LibYear\Tests;
+namespace ecoAPM\LibYear\Tests;
 
 use cli\Progress;
 use DateTimeImmutable;
-use LibYear\Calculator;
-use LibYear\ComposerFile;
-use LibYear\Dependency;
-use LibYear\Repository;
-use LibYear\RepositoryAPI;
+use ecoAPM\LibYear\Calculator;
+use ecoAPM\LibYear\ComposerFile;
+use ecoAPM\LibYear\Dependency;
+use ecoAPM\LibYear\Repository;
+use ecoAPM\LibYear\RepositoryAPI;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
