@@ -24,9 +24,11 @@ class App
 	public function __construct(Cli $cli, Calculator $calculator, ComposerFile $composer, $output)
 	{
 		$this->cli = $cli->description('libyear: a simple measure of dependency freshness -- calculates the total number of years behind their respective newest versions for all dependencies listed in a composer.json file.')
-			->opt('quiet:q', 'only display outdated dependencies', false, 'boolean')
-			->opt('update:u', 'update composer.json with newest versions', false, 'boolean')
-			->opt('verbose:v', 'display network debug information', false, 'boolean')
+			->opt('quiet:q', 'only display outdated dependencies')
+			->opt('update:u', 'update composer.json with newest versions')
+			->opt('verbose:v', 'display network debug information')
+			->opt('limit:l', 'fails if total libyears behind is greater than this value')
+			->opt('limit-any:a', 'fails if any dependency is more libyears behind than this value')
 			->arg('path', 'the directory containing composer.json and composer.lock files');
 		$this->calculator = $calculator;
 		$this->composer = $composer;
@@ -53,6 +55,8 @@ class App
 		$quiet_mode = $arguments->getOpt('quiet') !== null;
 		$update_mode = $arguments->getOpt('update') !== null;
 		$verbose_mode = $arguments->getOpt('verbose') !== null;
+		$limit_total = $arguments->getOpt('limit');
+		$limit_any = $arguments->getOpt('limit-any');
 		$dir = $arguments->getArg('path') ?? '.';
 
 		$real_dir = realpath($dir);
@@ -67,6 +71,23 @@ class App
 		$total_display = number_format($total, 2);
 
 		fwrite($this->output, "Total: $total_display libyears behind\n");
+
+		if ($limit_any != null) {
+			$beyond_limit = array_filter($dependencies, fn($d) => $d->getLibyearsBehind() > $limit_any);
+
+			/** @var Dependency $dependency */
+			foreach ($beyond_limit as $dependency) {
+				$behind = number_format($dependency->getLibyearsBehind(), 2);
+				fwrite($this->output, "{$dependency->name} is {$behind} libyears behind, which is greater than the set limit of {$limit_any}\n");
+			}
+
+			return sizeof($beyond_limit) == 0;
+		}
+
+		if ($limit_total != null && $total > $limit_total) {
+			fwrite($this->output, "Total libyears behind is greater than the set limit of {$limit_total}\n");
+			return false;
+		}
 
 		if ($update_mode) {
 			$this->composer->update($dir, $dependencies);

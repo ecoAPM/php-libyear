@@ -105,6 +105,62 @@ class AppTest extends TestCase
 		$this->assertStringNotContainsString('Test 1', $console);
 	}
 
+	public function testFailsIfTotalLimitIsExceeded()
+	{
+		//arrange
+		$composer = Mockery::mock(ComposerFile::class);
+		$output = fopen('php://memory', 'a+');
+		$app = new App(new Cli(), self::calculator(), $composer, $output);
+
+		//act
+		$result = $app->run(['libyear', '-l', '0']);
+
+		//assert
+		$this->assertFalse($result);
+	}
+
+	public function testPassesIfTotalLimitIsNotExceeded()
+	{
+		//arrange
+		$composer = Mockery::mock(ComposerFile::class);
+		$output = fopen('php://memory', 'a+');
+		$app = new App(new Cli(), self::calculator(), $composer, $output);
+
+		//act
+		$result = $app->run(['libyear', '-l', '2']);
+
+		//assert
+		$this->assertTrue($result);
+	}
+
+	public function testFailsIfAnyLimitIsExceeded()
+	{
+		//arrange
+		$composer = Mockery::mock(ComposerFile::class);
+		$output = fopen('php://memory', 'a+');
+		$app = new App(new Cli(), self::calculator(), $composer, $output);
+
+		//act
+		$result = $app->run(['libyear', '-a', '0']);
+
+		//assert
+		$this->assertFalse($result);
+	}
+
+	public function testPassesIfAnyLimitIsNotExceeded()
+	{
+		//arrange
+		$composer = Mockery::mock(ComposerFile::class);
+		$output = fopen('php://memory', 'a+');
+		$app = new App(new Cli(), self::calculator(), $composer, $output);
+
+		//act
+		$result = $app->run(['libyear', '-a', '2']);
+
+		//assert
+		$this->assertTrue($result);
+	}
+
 	public function testUpdatesComposerIfFlagSet()
 	{
 		//arrange
