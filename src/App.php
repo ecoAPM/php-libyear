@@ -3,6 +3,9 @@
 namespace ecoAPM\LibYear;
 
 use cli\Table;
+use Garden\Cli\Cli;
+use Exception;
+use InvalidArgumentException;
 
 class App
 {
@@ -11,14 +14,21 @@ class App
 
 	/** @var resource */
 	private $output;
+	private Cli $cli;
 
 	/**
+	 * @param Cli $cli
 	 * @param Calculator $calculator
 	 * @param ComposerFile $composer
 	 * @param resource $output
 	 */
-	public function __construct(Calculator $calculator, ComposerFile $composer, $output)
+	public function __construct(Cli $cli, Calculator $calculator, ComposerFile $composer, $output)
 	{
+		$this->cli = $cli->description('libyear: a simple measure of dependency freshness -- calculates the total number of years behind their respective newest versions for all dependencies listed in a composer.json file.')
+			->opt('quiet:q', 'only display outdated dependencies', false, 'boolean')
+			->opt('update:u', 'update composer.json with newest versions', false, 'boolean')
+			->opt('verbose:v', 'display network debug information', false, 'boolean')
+			->arg('path', 'the directory containing composer.json and composer.lock files');
 		$this->calculator = $calculator;
 		$this->composer = $composer;
 		$this->output = $output;
@@ -29,18 +39,21 @@ class App
 	 */
 	public function run(array $args): void
 	{
-		if (in_array('-h', $args) || in_array('--help', $args))
-		{
-			$this->showHelp();
+		try {
+			$arguments = $this->cli->parse($args, false);
+		} catch (Exception $e) {
+			$error = $e->getMessage();
+			fwrite($this->output, "{$error}\n");
+			if (!str_starts_with($error, "usage: ")) {
+				$this->showHelp();
+			}
 			return;
 		}
 
-		$quiet_mode = in_array('-q', $args) || in_array('--quiet', $args);
-		$update_mode = in_array('-u', $args) || in_array('--update', $args);
-		$verbose_mode = in_array('-v', $args) || in_array('--verbose', $args);
-		$known_options = ['-q', '--quiet', '-u', '--update', '-v', '--verbose'];
-		$other_args = array_filter(array_slice($args, 1), fn ($a) => !in_array($a, $known_options));
-		$dir = !empty($other_args) ? array_values($other_args)[0] : '.';
+		$quiet_mode = $arguments->getOpt('quiet') !== null;
+		$update_mode = $arguments->getOpt('update') !== null;
+		$verbose_mode = $arguments->getOpt('verbose') !== null;
+		$dir = $arguments->getArg('path') ?? '.';
 
 		$real_dir = realpath($dir);
 		fwrite($this->output, "Gathering information for $real_dir...\n");
@@ -58,6 +71,7 @@ class App
 		if ($update_mode) {
 			$this->composer->update($dir, $dependencies);
 			fwrite($this->output, "composer.json updated\n");
+			fwrite($this->output, "A manual run of \"composer update\" is required to actually update dependencies\n");
 		}
 	}
 
@@ -83,10 +97,10 @@ class App
 				fn (Dependency $dependency): array => [
 					$dependency->name,
 					$dependency->current_version->version_number,
-					isset($dependency->current_version->released) ? $dependency->current_version->released->format('Y-m-d') : "",
-					isset($dependency->newest_version->version_number) ? $dependency->newest_version->version_number : "",
-					isset($dependency->newest_version->released) ? $dependency->newest_version->released->format('Y-m-d') : "",
-					$dependency->getLibyearsBehind() !== null ? number_format($dependency->getLibyearsBehind(), 2) : ""
+					isset($dependency->current_version->released) ? $dependency->current_version->released->format('Y-m-d') : '',
+					isset($dependency->newest_version->version_number) ? $dependency->newest_version->version_number : '',
+					isset($dependency->newest_version->released) ? $dependency->newest_version->released->format('Y-m-d') : '',
+					$dependency->getLibyearsBehind() !== null ? number_format($dependency->getLibyearsBehind(), 2) : ''
 				],
 				$dependencies
 			)
@@ -98,25 +112,14 @@ class App
 		}
 	}
 
-	private function showHelp(): void
+	/**
+	 * @return void
+	 */
+	public function showHelp(): void
 	{
-		$output = 'libyear: a simple measure of dependency freshness' . PHP_EOL
-			. PHP_EOL
-			. 'Calculates the total number of years behind their respective newest versions for all'
-				. ' dependencies listed in composer.json.' . PHP_EOL
-			. PHP_EOL
-			. 'Usage: libyear <path> [-q|--quiet] [-u|--update] [-v|--verbose]' . PHP_EOL
-			. PHP_EOL
-			. 'Arguments:' . PHP_EOL
-			. '- path (required) the directory containing composer.json and composer.lock files' . PHP_EOL
-			. PHP_EOL
-			. 'Options:' . PHP_EOL
-			. '--help    (-h)    show this message and exit' . PHP_EOL
-			. '--quiet   (-q)    only display outdated dependencies' . PHP_EOL
-			. '--update  (-u)    update composer.json with newest versions' . PHP_EOL
-			. '--verbose (-v)    display network debug information' . PHP_EOL
-			. PHP_EOL;
-
-			fwrite($this->output, $output);
+		ob_start();
+		$this->cli->writeHelp();
+		$output = ob_get_clean();
+		fwrite($this->output, $output);
 	}
 }

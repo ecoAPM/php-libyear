@@ -7,6 +7,8 @@ use ecoAPM\LibYear\App;
 use ecoAPM\LibYear\Calculator;
 use ecoAPM\LibYear\ComposerFile;
 use ecoAPM\LibYear\Dependency;
+use Garden\Cli\Args;
+use Garden\Cli\Cli;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -37,7 +39,7 @@ class AppTest extends TestCase
 		//arrange
 		$composer = Mockery::mock(ComposerFile::class);
 		$output = fopen('php://memory', 'a+');
-		$app = new App(self::calculator(), $composer, $output);
+		$app = new App(new Cli(), self::calculator(), $composer, $output);
 
 		//act
 		$app->run(['libyear', '--help']);
@@ -45,8 +47,8 @@ class AppTest extends TestCase
 		//assert
 		fseek($output, 0);
 		$console = stream_get_contents($output);
-		$this->assertStringContainsString('Arguments:', $console);
-		$this->assertStringContainsString('Options:', $console);
+		$this->assertStringContainsString('OPTIONS', $console);
+		$this->assertStringContainsString('ARGUMENTS', $console);
 	}
 
 	public function testShowsAllDependenciesByDefault()
@@ -54,7 +56,7 @@ class AppTest extends TestCase
 		//arrange
 		$composer = Mockery::mock(ComposerFile::class);
 		$output = fopen('php://memory', 'a+');
-		$app = new App(self::calculator(), $composer, $output);
+		$app = new App(new Cli(), self::calculator(), $composer, $output);
 
 		//act
 		$app->run(['libyear', '.']);
@@ -71,10 +73,10 @@ class AppTest extends TestCase
 		//arrange
 		$composer = Mockery::mock(ComposerFile::class);
 		$output = fopen('php://memory', 'a+');
-		$app = new App(self::calculator(), $composer, $output);
+		$app = new App(new Cli(), self::calculator(), $composer, $output);
 
 		//act
-		$app->run(['libyear', '.', '-q']);
+		$app->run(['libyear', '-q', 'test']);
 
 		//assert
 		fseek($output, 0);
@@ -90,7 +92,7 @@ class AppTest extends TestCase
 			'update' => null
 		]);
 		$output = fopen('php://memory', 'a+');
-		$app = new App(self::calculator(), $composer, $output);
+		$app = new App(new Cli(), self::calculator(), $composer, $output);
 
 		//act
 		$app->run(['libyear', '.', '-u']);
@@ -105,7 +107,7 @@ class AppTest extends TestCase
 		//arrange
 		$composer = Mockery::mock(ComposerFile::class);
 		$output = fopen('php://memory', 'a+');
-		$app = new App(self::calculator(), $composer, $output);
+		$app = new App(new Cli(), self::calculator(), $composer, $output);
 
 		//act
 		$app->run(['libyear', '.']);
