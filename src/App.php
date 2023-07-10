@@ -5,7 +5,6 @@ namespace ecoAPM\LibYear;
 use cli\Table;
 use Garden\Cli\Cli;
 use Exception;
-use InvalidArgumentException;
 
 class App
 {
@@ -37,17 +36,18 @@ class App
 	/**
 	 * @param string[] $args
 	 */
-	public function run(array $args): void
+	public function run(array $args): bool
 	{
 		try {
 			$arguments = $this->cli->parse($args, false);
 		} catch (Exception $e) {
-			$error = $e->getMessage();
-			fwrite($this->output, "{$error}\n");
-			if (!str_starts_with($error, "usage: ")) {
+			$msg = $e->getMessage();
+			fwrite($this->output, "{$msg}\n");
+			if (!str_starts_with($msg, "usage: ")) {
 				$this->showHelp();
+				return false;
 			}
-			return;
+			return true;
 		}
 
 		$quiet_mode = $arguments->getOpt('quiet') !== null;
@@ -73,6 +73,8 @@ class App
 			fwrite($this->output, "composer.json updated\n");
 			fwrite($this->output, "A manual run of \"composer update\" is required to actually update dependencies\n");
 		}
+
+		return true;
 	}
 
 	/**

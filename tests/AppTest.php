@@ -42,13 +42,32 @@ class AppTest extends TestCase
 		$app = new App(new Cli(), self::calculator(), $composer, $output);
 
 		//act
-		$app->run(['libyear', '--help']);
+		$result = $app->run(['libyear', '--help']);
 
 		//assert
 		fseek($output, 0);
 		$console = stream_get_contents($output);
 		$this->assertStringContainsString('OPTIONS', $console);
 		$this->assertStringContainsString('ARGUMENTS', $console);
+		$this->assertTrue($result);
+	}
+
+	public function testInvalidOptionDisplaysHelpText()
+	{
+		//arrange
+		$composer = Mockery::mock(ComposerFile::class);
+		$output = fopen('php://memory', 'a+');
+		$app = new App(new Cli(), self::calculator(), $composer, $output);
+
+		//act
+		$result = $app->run(['libyear', '-x']);
+
+		//assert
+		fseek($output, 0);
+		$console = stream_get_contents($output);
+		$this->assertStringContainsString('OPTIONS', $console);
+		$this->assertStringContainsString('ARGUMENTS', $console);
+		$this->assertFalse($result);
 	}
 
 	public function testShowsAllDependenciesByDefault()
@@ -59,13 +78,14 @@ class AppTest extends TestCase
 		$app = new App(new Cli(), self::calculator(), $composer, $output);
 
 		//act
-		$app->run(['libyear', '.']);
+		$result = $app->run(['libyear', '.']);
 
 		//assert
 		fseek($output, 0);
 		$console = stream_get_contents($output);
 		$this->assertStringContainsString('Test 1', $console);
 		$this->assertStringContainsString('Test 2', $console);
+		$this->assertTrue($result);
 	}
 
 	public function testQuietModeOnlyShowsOutdated()

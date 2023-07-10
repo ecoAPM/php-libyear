@@ -8,4 +8,5 @@ const vendor_indicator = 'vendor' . DIRECTORY_SEPARATOR . 'ecoapm' . DIRECTORY_S
 $is_vendored = strpos(__DIR__, vendor_indicator) === strlen(__DIR__) - strlen(vendor_indicator);
 require_once __DIR__ . ($is_vendored ? '/../../..' : '') . '/vendor/autoload.php';
 
-Factory::app()->run($argv);
+$result = Factory::app()->run($argv);
+exit($result ? 0 : 1);
