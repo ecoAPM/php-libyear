@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f880ddc83215799fde2556e1fc051d3f",
+    "content-hash": "b525c244e549f4a498c87a842ad7670f",
     "packages": [
         {
             "name": "composer/semver",
@@ -906,7 +906,7 @@
         },
         {
             "name": "mockery/mockery",
-            "version": "1.6.7",
+            "version": "1.6.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mockery/mockery.git",
