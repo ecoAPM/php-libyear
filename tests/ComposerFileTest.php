@@ -265,4 +265,39 @@ class ComposerFileTest extends TestCase
 			]
 		]);
 	}
+
+	public function testCanGetMinimumStability()
+	{
+		//arrange
+		$file_system = Mockery::mock(FileSystem::class, [
+			'exists' => true,
+			'getJSON' => [
+				'minimum-stability' => 'dev'
+			]
+		]);
+		$output = fopen('php://memory', 'a+');
+		$composer = new ComposerFile($file_system, $output);
+
+		//act
+		$repositories = $composer->getMinimumStability('.');
+
+		$this->assertEquals('dev', $repositories);
+	}
+
+	public function testMinimumStabilityShouldBeStableByDefault()
+	{
+		//arrange
+		$file_system = Mockery::mock(FileSystem::class, [
+			'exists' => true,
+			'getJSON' => [
+			]
+		]);
+		$output = fopen('php://memory', 'a+');
+		$composer = new ComposerFile($file_system, $output);
+
+		//act
+		$repositories = $composer->getMinimumStability('.');
+
+		$this->assertEquals('stable', $repositories);
+	}
 }
