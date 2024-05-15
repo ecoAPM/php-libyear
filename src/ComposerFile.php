@@ -59,6 +59,12 @@ class ComposerFile
 		return $dependencies;
 	}
 
+	public function getMinimumStability(string $directory): string
+	{
+		$json = $this->getComposerJSON($directory);
+		return $json['minimum-stability'] ?? 'stable';
+	}
+
 	private function getPackageNames(string $directory): array
 	{
 		$json = $this->getComposerJSON($directory);

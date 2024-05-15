@@ -4,6 +4,7 @@ namespace ecoAPM\LibYear;
 
 use cli\Progress;
 use Composer\Semver\Semver;
+use Composer\Semver\VersionParser;
 use DateTimeImmutable;
 use DateTimeInterface;
 
@@ -35,7 +36,7 @@ class Calculator
 		$this->progress->setTotal(count($dependencies));
 		$this->progress->display();
 		foreach ($dependencies as $dependency) {
-			$this->updateVersionInfo($dependency, array_filter($repositories), $verbose);
+			$this->updateVersionInfo($dependency, array_filter($repositories), $verbose, $directory);
 			$this->progress->tick();
 		}
 		$this->progress->finish();
@@ -47,9 +48,10 @@ class Calculator
 	 * @param Dependency $dependency
 	 * @param Repository[] $repositories
 	 * @param bool $verbose
+	 * @param string $directory
 	 * @return void
 	 */
-	private function updateVersionInfo(Dependency $dependency, array $repositories, bool $verbose)
+	private function updateVersionInfo(Dependency $dependency, array $repositories, bool $verbose, string $directory)
 	{
 		$package_info = [];
 		foreach ($repositories as $repository) {
@@ -64,7 +66,14 @@ class Calculator
 			return;
 		}
 
+		$stabilities = ['stable', 'RC', 'beta', 'alpha', 'dev'];
 		$sorted_versions = Semver::rsort(array_keys($versions));
+		$minStability = $this->composer->getMinimumStability($directory);
+		$minStabilityIndex = array_search($minStability, $stabilities);
+		$sorted_versions = array_values(array_filter(
+			$sorted_versions,
+			fn ($version) => array_search(VersionParser::parseStability($version), $stabilities) <= $minStabilityIndex
+		));
 
 		$current_version = $dependency->current_version->version_number;
 		$current_version_release_date = $this->getReleaseDate($sorted_versions, $versions, $current_version);
