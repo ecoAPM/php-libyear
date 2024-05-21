@@ -24,7 +24,8 @@ class CalculatorTest extends TestCase
 		$dependency = new Dependency('vendor_name/package_name', '1.2.3');
 		$composer = Mockery::mock(ComposerFile::class, [
 			'getRepositories' => [$repository->url],
-			'getDependencies' => [$dependency]
+			'getDependencies' => [$dependency],
+			'getMinimumStability' => 'stable',
 		]);
 
 		$api = Mockery::mock(RepositoryAPI::class, [
@@ -59,7 +60,8 @@ class CalculatorTest extends TestCase
 		$dependency2 = new Dependency('vendor1/package2', '2.3.4');
 		$composer = Mockery::mock(ComposerFile::class, [
 			'getRepositories' => [],
-			'getDependencies' => [$dependency1, $dependency2]
+			'getDependencies' => [$dependency1, $dependency2],
+			'getMinimumStability' => 'stable',
 		]);
 
 		$api = Mockery::mock(RepositoryAPI::class);
@@ -96,7 +98,8 @@ class CalculatorTest extends TestCase
 		$dependency = new Dependency('vendor1/package1', '1.2.3');
 		$composer = Mockery::mock(ComposerFile::class, [
 			'getRepositories' => ['repo1', 'repo2'],
-			'getDependencies' => [$dependency]
+			'getDependencies' => [$dependency],
+			'getMinimumStability' => 'stable',
 		]);
 
 		$api = Mockery::mock(RepositoryAPI::class, [
@@ -133,7 +136,8 @@ class CalculatorTest extends TestCase
 		$dependency = new Dependency('vendor1/package1', '1.2.3');
 		$composer = Mockery::mock(ComposerFile::class, [
 			'getRepositories' => [],
-			'getDependencies' => [$dependency]
+			'getDependencies' => [$dependency],
+			'getMinimumStability' => 'stable',
 		]);
 
 		$api = Mockery::mock(RepositoryAPI::class, [
@@ -163,7 +167,8 @@ class CalculatorTest extends TestCase
 		$dependency = new Dependency('vendor1/package1', '1.2.3');
 		$composer = Mockery::mock(ComposerFile::class, [
 			'getRepositories' => ['repo1', 'repo2'],
-			'getDependencies' => [$dependency]
+			'getDependencies' => [$dependency],
+			'getMinimumStability' => 'stable',
 		]);
 
 		$repo1 = Mockery::mock(Repository::class);
@@ -197,7 +202,8 @@ class CalculatorTest extends TestCase
 		$dependency = new Dependency('vendor1/package1', '1.2.3');
 		$composer = Mockery::mock(ComposerFile::class, [
 			'getRepositories' => ['repo1', 'repo2'],
-			'getDependencies' => [$dependency]
+			'getDependencies' => [$dependency],
+			'getMinimumStability' => 'stable',
 		]);
 
 		$repo1 = Mockery::mock(Repository::class);
@@ -242,5 +248,79 @@ class CalculatorTest extends TestCase
 
 		//assert
 		$this->assertEquals(3.75, $total_behind);
+	}
+
+	public function testSkipBadStability()
+	{
+		//arrange
+		$repository = new Repository('https://repo.packagist.org', '/p2/%package%.json');
+		$dependency = new Dependency('vendor_name/package_name', '1.2.3');
+		$composer = Mockery::mock(ComposerFile::class, [
+			'getRepositories' => [$repository->url],
+			'getDependencies' => [$dependency],
+			'getMinimumStability' => 'stable',
+		]);
+
+		$api = Mockery::mock(RepositoryAPI::class, [
+			'getInfo' => $repository,
+			'getPackageInfo' => [
+				['version' => '1.2.3', 'time' => '2018-07-01'],
+				['version' => '2.3.4', 'time' => '2019-08-01'],
+				['version' => '2.3.5-beta', 'time' => '2020-01-01'],
+			]
+		]);
+		$progress = Mockery::mock(Progress::class, [
+			'setTotal' => null,
+			'display' => null,
+			'tick' => null,
+			'finish' => null
+		]);
+		$calculator = new Calculator($composer, $api, $progress);
+
+		//act
+		$dependencies = $calculator->getDependencyInfo('.', false);
+
+		//assert
+		$this->assertEquals('1.2.3', $dependencies[0]->current_version->version_number);
+		$this->assertEquals(new DateTimeImmutable('2018-07-01'), $dependencies[0]->current_version->released);
+		$this->assertEquals('2.3.4', $dependencies[0]->newest_version->version_number);
+		$this->assertEquals(new DateTimeImmutable('2019-08-01'), $dependencies[0]->newest_version->released);
+	}
+
+	public function testKeepDevStabilityIfApplicable()
+	{
+		//arrange
+		$repository = new Repository('https://repo.packagist.org', '/p2/%package%.json');
+		$dependency = new Dependency('vendor_name/package_name', '1.2.3');
+		$composer = Mockery::mock(ComposerFile::class, [
+			'getRepositories' => [$repository->url],
+			'getDependencies' => [$dependency],
+			'getMinimumStability' => 'dev',
+		]);
+
+		$api = Mockery::mock(RepositoryAPI::class, [
+			'getInfo' => $repository,
+			'getPackageInfo' => [
+				['version' => '1.2.3', 'time' => '2018-07-01'],
+				['version' => '2.3.4', 'time' => '2019-08-01'],
+				['version' => '2.3.5-beta', 'time' => '2020-01-01'],
+			]
+		]);
+		$progress = Mockery::mock(Progress::class, [
+			'setTotal' => null,
+			'display' => null,
+			'tick' => null,
+			'finish' => null
+		]);
+		$calculator = new Calculator($composer, $api, $progress);
+
+		//act
+		$dependencies = $calculator->getDependencyInfo('.', false);
+
+		//assert
+		$this->assertEquals('1.2.3', $dependencies[0]->current_version->version_number);
+		$this->assertEquals(new DateTimeImmutable('2018-07-01'), $dependencies[0]->current_version->released);
+		$this->assertEquals('2.3.5-beta', $dependencies[0]->newest_version->version_number);
+		$this->assertEquals(new DateTimeImmutable('2020-01-01'), $dependencies[0]->newest_version->released);
 	}
 }
