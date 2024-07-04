@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "18ef66e67aadca5f6ebbe28f298acea4",
+    "content-hash": "a7fe4b58416460d1f36e919377d845e1",
     "packages": [
         {
             "name": "composer/semver",
@@ -790,20 +790,20 @@
         },
         {
             "name": "wp-cli/php-cli-tools",
-            "version": "v0.11.22",
+            "version": "v0.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wp-cli/php-cli-tools.git",
-                "reference": "a6bb94664ca36d0962f9c2ff25591c315a550c51"
+                "reference": "2d1da4751f47622b56e6616c87b2fb53decee4e5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wp-cli/php-cli-tools/zipball/a6bb94664ca36d0962f9c2ff25591c315a550c51",
-                "reference": "a6bb94664ca36d0962f9c2ff25591c315a550c51",
+                "url": "https://api.github.com/repos/wp-cli/php-cli-tools/zipball/2d1da4751f47622b56e6616c87b2fb53decee4e5",
+                "reference": "2d1da4751f47622b56e6616c87b2fb53decee4e5",
                 "shasum": ""
             },
             "require": {
-                "php": ">= 5.3.0"
+                "php": ">= 5.6.0"
             },
             "require-dev": {
                 "roave/security-advisories": "dev-latest",
@@ -847,9 +847,9 @@
             ],
             "support": {
                 "issues": "https://github.com/wp-cli/php-cli-tools/issues",
-                "source": "https://github.com/wp-cli/php-cli-tools/tree/v0.11.22"
+                "source": "https://github.com/wp-cli/php-cli-tools/tree/v0.12.0"
             },
-            "time": "2023-12-03T19:25:05+00:00"
+            "time": "2024-05-22T20:20:04+00:00"
         }
     ],
     "packages-dev": [
