@@ -24,7 +24,7 @@ jobs:
       run: php -dphar.readonly=0 build.php
 
     - name: Upload build
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: libyear.phar
         path: dist/libyear.phar
