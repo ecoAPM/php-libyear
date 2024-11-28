@@ -3,6 +3,7 @@
 namespace ecoAPM\LibYear;
 
 use cli\Table;
+use Garden\Cli\Args;
 use Garden\Cli\Cli;
 use Exception;
 
@@ -52,6 +53,11 @@ class App
 			return true;
 		}
 
+		return $this->runWithParsedArguments($arguments);
+	}
+
+	private function runWithParsedArguments(Args $arguments): bool
+	{
 		$quiet_mode = $arguments->getOpt('quiet') !== null;
 		$update_mode = $arguments->getOpt('update') !== null;
 		$verbose_mode = $arguments->getOpt('verbose') !== null;
