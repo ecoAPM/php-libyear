@@ -21,10 +21,10 @@
         "composer/semver": "3.4.3",
         "guzzlehttp/guzzle": "7.9.2",
         "vanilla/garden-cli": "v4.0",
-        "wp-cli/php-cli-tools": "v0.12.1"
+        "wp-cli/php-cli-tools": "v0.12.4"
     },
     "require-dev": {
-        "phpunit/phpunit": "10.5.38",
+        "phpunit/phpunit": "10.5.44",
         "mockery/mockery": "1.6.12"
     },
     "autoload": {
