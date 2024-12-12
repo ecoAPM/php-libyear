@@ -24,7 +24,7 @@
         "wp-cli/php-cli-tools": "v0.12.1"
     },
     "require-dev": {
-        "phpunit/phpunit": "10.5.38",
+        "phpunit/phpunit": "10.5.44",
         "mockery/mockery": "1.6.12"
     },
     "autoload": {
