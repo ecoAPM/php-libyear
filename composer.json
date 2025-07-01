@@ -18,13 +18,13 @@
     "require": {
         "php": ">=8.1",
         "ext-json": ">=8.1",
-        "composer/semver": "3.4.3",
-        "guzzlehttp/guzzle": "7.9.3",
+        "composer/semver": "3.4.4",
+        "guzzlehttp/guzzle": "7.10.0",
         "vanilla/garden-cli": "v4.0",
         "wp-cli/php-cli-tools": "v0.12.5"
     },
     "require-dev": {
-        "phpunit/phpunit": "10.5.44",
+        "phpunit/phpunit": "10.5.47",
         "mockery/mockery": "1.6.12"
     },
     "autoload": {
