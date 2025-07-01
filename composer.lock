@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0222269c53199f3f3b0c1d0b3627a8e9",
+    "content-hash": "cf36f354e01fb23b9fca0d710240ff9a",
     "packages": [
         {
             "name": "composer/semver",
@@ -574,16 +574,16 @@
         },
         {
             "name": "psr/log",
-            "version": "3.0.0",
+            "version": "3.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/log.git",
-                "reference": "fe5ea303b0887d5caefd3d431c3e61ad47037001"
+                "reference": "f16e1d5863e37f8d8c2a01719f5b34baa2b714d3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log/zipball/fe5ea303b0887d5caefd3d431c3e61ad47037001",
-                "reference": "fe5ea303b0887d5caefd3d431c3e61ad47037001",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/f16e1d5863e37f8d8c2a01719f5b34baa2b714d3",
+                "reference": "f16e1d5863e37f8d8c2a01719f5b34baa2b714d3",
                 "shasum": ""
             },
             "require": {
@@ -618,9 +618,9 @@
                 "psr-3"
             ],
             "support": {
-                "source": "https://github.com/php-fig/log/tree/3.0.0"
+                "source": "https://github.com/php-fig/log/tree/3.0.2"
             },
-            "time": "2021-07-14T16:46:02+00:00"
+            "time": "2024-09-11T13:17:53+00:00"
         },
         {
             "name": "ralouphie/getallheaders",
@@ -668,16 +668,16 @@
         },
         {
             "name": "symfony/deprecation-contracts",
-            "version": "v3.5.1",
+            "version": "v3.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/deprecation-contracts.git",
-                "reference": "74c71c939a79f7d5bf3c1ce9f5ea37ba0114c6f6"
+                "reference": "63afe740e99a13ba87ec199bb07bbdee937a5b62"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/74c71c939a79f7d5bf3c1ce9f5ea37ba0114c6f6",
-                "reference": "74c71c939a79f7d5bf3c1ce9f5ea37ba0114c6f6",
+                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/63afe740e99a13ba87ec199bb07bbdee937a5b62",
+                "reference": "63afe740e99a13ba87ec199bb07bbdee937a5b62",
                 "shasum": ""
             },
             "require": {
@@ -690,7 +690,7 @@
                     "name": "symfony/contracts"
                 },
                 "branch-alias": {
-                    "dev-main": "3.5-dev"
+                    "dev-main": "3.6-dev"
                 }
             },
             "autoload": {
@@ -715,7 +715,7 @@
             "description": "A generic function and convention to trigger deprecation notices",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/deprecation-contracts/tree/v3.5.1"
+                "source": "https://github.com/symfony/deprecation-contracts/tree/v3.6.0"
             },
             "funding": [
                 {
@@ -731,7 +731,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-25T14:20:29+00:00"
+            "time": "2024-09-25T14:21:43+00:00"
         },
         {
             "name": "vanilla/garden-cli",
@@ -855,20 +855,20 @@
     "packages-dev": [
         {
             "name": "hamcrest/hamcrest-php",
-            "version": "v2.0.1",
+            "version": "v2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hamcrest/hamcrest-php.git",
-                "reference": "8c3d0a3f6af734494ad8f6fbbee0ba92422859f3"
+                "reference": "f8b1c0173b22fa6ec77a81fe63e5b01eba7e6487"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hamcrest/hamcrest-php/zipball/8c3d0a3f6af734494ad8f6fbbee0ba92422859f3",
-                "reference": "8c3d0a3f6af734494ad8f6fbbee0ba92422859f3",
+                "url": "https://api.github.com/repos/hamcrest/hamcrest-php/zipball/f8b1c0173b22fa6ec77a81fe63e5b01eba7e6487",
+                "reference": "f8b1c0173b22fa6ec77a81fe63e5b01eba7e6487",
                 "shasum": ""
             },
             "require": {
-                "php": "^5.3|^7.0|^8.0"
+                "php": "^7.4|^8.0"
             },
             "replace": {
                 "cordoval/hamcrest-php": "*",
@@ -876,8 +876,8 @@
                 "kodova/hamcrest-php": "*"
             },
             "require-dev": {
-                "phpunit/php-file-iterator": "^1.4 || ^2.0",
-                "phpunit/phpunit": "^4.8.36 || ^5.7 || ^6.5 || ^7.0"
+                "phpunit/php-file-iterator": "^1.4 || ^2.0 || ^3.0",
+                "phpunit/phpunit": "^4.8.36 || ^5.7 || ^6.5 || ^7.0 || ^8.0 || ^9.0"
             },
             "type": "library",
             "extra": {
@@ -900,9 +900,9 @@
             ],
             "support": {
                 "issues": "https://github.com/hamcrest/hamcrest-php/issues",
-                "source": "https://github.com/hamcrest/hamcrest-php/tree/v2.0.1"
+                "source": "https://github.com/hamcrest/hamcrest-php/tree/v2.1.1"
             },
-            "time": "2020-07-09T08:09:16+00:00"
+            "time": "2025-04-30T06:54:44+00:00"
         },
         {
             "name": "mockery/mockery",
@@ -989,16 +989,16 @@
         },
         {
             "name": "myclabs/deep-copy",
-            "version": "1.12.1",
+            "version": "1.13.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/DeepCopy.git",
-                "reference": "123267b2c49fbf30d78a7b2d333f6be754b94845"
+                "reference": "1720ddd719e16cf0db4eb1c6eca108031636d46c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/123267b2c49fbf30d78a7b2d333f6be754b94845",
-                "reference": "123267b2c49fbf30d78a7b2d333f6be754b94845",
+                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/1720ddd719e16cf0db4eb1c6eca108031636d46c",
+                "reference": "1720ddd719e16cf0db4eb1c6eca108031636d46c",
                 "shasum": ""
             },
             "require": {
@@ -1037,7 +1037,7 @@
             ],
             "support": {
                 "issues": "https://github.com/myclabs/DeepCopy/issues",
-                "source": "https://github.com/myclabs/DeepCopy/tree/1.12.1"
+                "source": "https://github.com/myclabs/DeepCopy/tree/1.13.1"
             },
             "funding": [
                 {
@@ -1045,20 +1045,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-11-08T17:47:46+00:00"
+            "time": "2025-04-29T12:36:36+00:00"
         },
         {
             "name": "nikic/php-parser",
-            "version": "v5.4.0",
+            "version": "v5.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "447a020a1f875a434d62f2a401f53b82a396e494"
+                "reference": "ae59794362fe85e051a58ad36b289443f57be7a9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/447a020a1f875a434d62f2a401f53b82a396e494",
-                "reference": "447a020a1f875a434d62f2a401f53b82a396e494",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/ae59794362fe85e051a58ad36b289443f57be7a9",
+                "reference": "ae59794362fe85e051a58ad36b289443f57be7a9",
                 "shasum": ""
             },
             "require": {
@@ -1101,9 +1101,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
-                "source": "https://github.com/nikic/PHP-Parser/tree/v5.4.0"
+                "source": "https://github.com/nikic/PHP-Parser/tree/v5.5.0"
             },
-            "time": "2024-12-30T11:07:19+00:00"
+            "time": "2025-05-31T08:24:38+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -1546,16 +1546,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "10.5.44",
+            "version": "10.5.47",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "1381c62769be4bb88fa4c5aec1366c7c66ca4f36"
+                "reference": "3637b3e50d32ab3a0d1a33b3b6177169ec3d95a3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/1381c62769be4bb88fa4c5aec1366c7c66ca4f36",
-                "reference": "1381c62769be4bb88fa4c5aec1366c7c66ca4f36",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/3637b3e50d32ab3a0d1a33b3b6177169ec3d95a3",
+                "reference": "3637b3e50d32ab3a0d1a33b3b6177169ec3d95a3",
                 "shasum": ""
             },
             "require": {
@@ -1565,7 +1565,7 @@
                 "ext-mbstring": "*",
                 "ext-xml": "*",
                 "ext-xmlwriter": "*",
-                "myclabs/deep-copy": "^1.12.1",
+                "myclabs/deep-copy": "^1.13.1",
                 "phar-io/manifest": "^2.0.4",
                 "phar-io/version": "^3.2.1",
                 "php": ">=8.1",
@@ -1627,7 +1627,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.5.44"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.5.47"
             },
             "funding": [
                 {
@@ -1639,11 +1639,19 @@
                     "type": "github"
                 },
                 {
+                    "url": "https://liberapay.com/sebastianbergmann",
+                    "type": "liberapay"
+                },
+                {
+                    "url": "https://thanks.dev/u/gh/sebastianbergmann",
+                    "type": "thanks_dev"
+                },
+                {
                     "url": "https://tidelift.com/funding/github/packagist/phpunit/phpunit",
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-01-31T07:00:38+00:00"
+            "time": "2025-06-20T11:29:11+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -2614,13 +2622,13 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
         "php": ">=8.1",
         "ext-json": ">=8.1"
     },
-    "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "platform-dev": {},
+    "plugin-api-version": "2.6.0"
 }
