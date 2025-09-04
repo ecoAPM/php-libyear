@@ -27,7 +27,7 @@ class ComposerFileTest extends TestCase
 		$repositories = $composer->getRepositories('.');
 
 		//assert
-		$this->assertEquals(['https://repo.packagist.org'], $repositories);
+		$this->assertEquals(['https://packagist.org'], $repositories);
 	}
 
 	public function testCachesFileSystemResponses()
@@ -88,7 +88,7 @@ class ComposerFileTest extends TestCase
 		$expected = [
 			'https://composer.example.com',
 			'https://composer.example.org',
-			'https://repo.packagist.org'
+			'https://packagist.org'
 		];
 		$this->assertEquals($expected, $repositories);
 	}

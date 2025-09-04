@@ -20,7 +20,7 @@ class CalculatorTest extends TestCase
 	public function testCanFillOutDependencyInfo()
 	{
 		//arrange
-		$repository = new Repository('https://repo.packagist.org', '/p2/%package%.json');
+		$repository = new Repository('https://packagist.org', '/packages/%package%.json');
 		$dependency = new Dependency('vendor_name/package_name', '1.2.3');
 		$composer = Mockery::mock(ComposerFile::class, [
 			'getRepositories' => [$repository->url],
@@ -30,8 +30,10 @@ class CalculatorTest extends TestCase
 		$api = Mockery::mock(RepositoryAPI::class, [
 			'getInfo' => $repository,
 			'getPackageInfo' => [
-				['version' => '1.2.3', 'time' => '2018-07-01'],
-				['version' => '2.3.4', 'extra' => ['drupal' => ['datestamp' => '1577836800']]]
+				'versions' => [
+					'1.2.3' => ['time' => '2018-07-01'],
+					'2.3.4' => ['extra' => ['drupal' => ['datestamp' => '1577836800']]]
+				]
 			]
 		]);
 		$progress = Mockery::mock(Progress::class, [
@@ -65,7 +67,7 @@ class CalculatorTest extends TestCase
 		$api = Mockery::mock(RepositoryAPI::class);
 		$api->shouldReceive('getPackageInfo')->andReturn(
 			[
-				['version' => '1.2.4', 'time' => '2018-07-01']
+				'versions' => ['1.2.4' => ['time' => '2018-07-01']]
 			],
 			[
 				[]
@@ -101,7 +103,7 @@ class CalculatorTest extends TestCase
 
 		$api = Mockery::mock(RepositoryAPI::class, [
 			'getPackageInfo' => [
-				['version' => '1.2.4', 'time' => '2018-07-01']
+				'versions' => ['1.2.4' => ['time' => '2018-07-01']]
 			]
 		]);
 		$repo1 = null;
@@ -172,7 +174,7 @@ class CalculatorTest extends TestCase
 		$api = Mockery::mock(RepositoryAPI::class);
 		$api->shouldReceive('getInfo')->andReturn($repo1, $repo2);
 		$api->shouldReceive('getPackageInfo')->with($dependency->name, $repo1, false)->andReturn([
-			['version' => '1.2.4', 'time' => '2018-07-01']
+			'versions' => ['1.2.4' => ['time' => '2018-07-01']]
 		]);
 		$api->shouldNotReceive('getPackageInfo')->with($dependency->name, $repo2);
 
@@ -207,7 +209,7 @@ class CalculatorTest extends TestCase
 		$api->shouldReceive('getInfo')->andReturn($repo1, $repo2);
 		$api->shouldReceive('getPackageInfo')->with($dependency->name, $repo1, false)->andReturn([]);
 		$api->shouldReceive('getPackageInfo')->with($dependency->name, $repo2, false)->andReturn([
-			['version' => '1.2.4', 'time' => '2018-07-01']
+			'versions' => ['1.2.4' => ['time' => '2018-07-01']]
 		]);
 
 		$progress = Mockery::mock(Progress::class, [

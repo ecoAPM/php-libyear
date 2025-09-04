@@ -27,6 +27,12 @@ class RepositoryAPI
 		try {
 			$response = $this->http_client->request('GET', "$url/packages.json");
 			$result = json_decode($response->getBody()->getContents(), true) ?? [];
+			
+			// For the new packagist.org, override the deprecated metadata-url 
+			if ($url === 'https://packagist.org') {
+				return new Repository($url, '/packages/%package%.json');
+			}
+			
 			return new Repository($url, array_key_exists('metadata-url', $result) ? $result['metadata-url'] : null);
 		} catch (GuzzleException $e) {
 			if ($verbose) {
@@ -42,7 +48,7 @@ class RepositoryAPI
 			$url = $repository->getMetadataURL($package);
 			$response = $this->http_client->request('GET', $url);
 			$json = json_decode($response->getBody()->getContents(), true);
-			return $json['packages'][$package] ?? [];
+			return $json['package'] ?? [];
 		} catch (GuzzleException $e) {
 			if ($verbose) {
 				fwrite($this->stderr, "Could not find info for $package on $repository->url\n");

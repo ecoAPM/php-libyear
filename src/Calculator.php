@@ -76,14 +76,16 @@ class Calculator
 	}
 
 	/**
-	 * @param array $releases
+	 * @param array $package_data
 	 * @return DateTimeInterface[]
 	 */
-	private static function getVersions(array $releases): array
+	private static function getVersions(array $package_data): array
 	{
 		$versions = [];
-		foreach ($releases as $release) {
-			$versions[$release['version']] = self::findReleaseDate($release);
+		if (isset($package_data['versions'])) {
+			foreach ($package_data['versions'] as $version => $version_data) {
+				$versions[$version] = self::findReleaseDate($version_data);
+			}
 		}
 		return array_filter($versions);
 	}

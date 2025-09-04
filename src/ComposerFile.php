@@ -4,7 +4,7 @@ namespace ecoAPM\LibYear;
 
 class ComposerFile
 {
-	const DEFAULT_URL = 'https://repo.packagist.org';
+	const DEFAULT_URL = 'https://packagist.org';
 
 	private FileSystem $file_system;
 
