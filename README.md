@@ -14,10 +14,8 @@ Calculates the total number of years behind their respective newest versions for
 
 ## Requirements
 
-- PHP v7.4 or later
+- PHP v8.1 or later
 - Composer v2
-
-Note that 2.3.0 is the last release that will support PHP 7.4 and 8.0; v3 (expected Q3 2023) will only support PHP 8.1+.
 
 Ongoing commercial support for legacy versions of PHP is available for [Corporate, Premier, and Title Sponsors](https://github.com/sponsors/ecoAPM).
 
@@ -41,15 +39,17 @@ Note that PHP for Windows does not include CA certificates, so you'll need to in
 
 ## Usage
 
-`vendor/bin/libyear <path> [-q|--quiet] [-v|--verbose]`
+`vendor/bin/libyear <path> [-q|--quiet] [-v|--verbose] [-u|--update]`
 
-(or `php path/to/libyear.phar <path> [-q|--quiet] [-v|--verbose]` for the PHAR version)
+(or `php path/to/libyear.phar <path> [-q|--quiet] [-v|--verbose] [-u|--update]` for the PHAR version)
 
 Arguments:
 - `path`: required, directory containing `composer.json` and `composer.lock` files
 
 Options:
 - `-h`, `--help`: show help text and exit without checking dependencies
+- `-l`, `--limit`: fails if total libyears behind is greater than this value
+- `-a`, `--limit-any`: fails if any dependency is more libyears behind than this value
 - `-q`, `--quiet`: quiet mode will only output libraries which are not up-to-date (that is, where "Libyears Behind" > 0)
 - `-u`, `--update`: update mode will write the latest version info to your `composer.json` file (note that you'll still need to run `composer update` to actually update your local dependencies)
 - `-v`, `--verbose`: verbose mode will output processing details like when a library isn't found in a repository
