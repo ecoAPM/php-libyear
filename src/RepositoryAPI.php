@@ -27,7 +27,13 @@ class RepositoryAPI
 		try {
 			$response = $this->http_client->request('GET', "$url/packages.json");
 			$result = json_decode($response->getBody()->getContents(), true) ?? [];
-			return new Repository($url, array_key_exists('metadata-url', $result) ? $result['metadata-url'] : null);
+
+			$metadata_pattern = array_key_exists('metadata-url', $result)
+				? $result['metadata-url']
+				: "/p2/%package%.json";
+
+			return new Repository($url, $metadata_pattern);
+
 		} catch (GuzzleException $e) {
 			if ($verbose) {
 				fwrite($this->stderr, "Could not create repository for $url\n");

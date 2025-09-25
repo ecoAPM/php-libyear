@@ -105,7 +105,7 @@ class CalculatorTest extends TestCase
 			]
 		]);
 		$repo1 = null;
-		$repo2 = new Repository('', null);
+		$repo2 = new Repository('', '');
 		$api->shouldReceive('getInfo')->andReturn(
 			$repo1,
 			$repo2

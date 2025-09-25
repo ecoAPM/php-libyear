@@ -40,7 +40,7 @@ class RepositoryAPITest extends TestCase
 		$this->assertEquals('/metadata/%package%.json', $repo->metadata_pattern);
 	}
 
-	public function testCanGetRepositoryInfoWithoutMetadata()
+	public function testCanGetRepositoryInfoWithDefaultMetadataPattern()
 	{
 		//arrange
 		$http_client = Mockery::mock(ClientInterface::class, [
@@ -60,7 +60,7 @@ class RepositoryAPITest extends TestCase
 
 		//assert
 		$this->assertEquals('https://composer.example.com', $repo->url);
-		$this->assertNull($repo->metadata_pattern);
+		$this->assertEquals('/p2/%package%.json', $repo->metadata_pattern);
 	}
 
 	public function testRepositoryIsNullOnException()
