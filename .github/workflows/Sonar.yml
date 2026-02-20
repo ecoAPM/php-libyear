@@ -7,26 +7,27 @@ jobs:
     if: github.actor != 'dependabot[bot]'
 
     steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
 
-    - name: Install pcov
-      run: sudo apt install php-pcov  
+      - name: Install pcov
+        run: sudo apt install php-pcov
 
-    - name: Install dependencies
-      run: composer install --prefer-dist --no-progress --no-suggest
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
 
-    - name: Run tests
-      run: vendor/bin/phpunit --log-junit results.xml --coverage-clover coverage.xml
-      env:
-        XDEBUG_MODE: coverage
+      - name: Run tests
+        run: vendor/bin/phpunit --log-junit results.xml --coverage-clover coverage.xml
+        env:
+          XDEBUG_MODE: coverage
 
-    - name: Prepare files
-      run: sed -i 's#'`pwd`'/##' results.xml coverage.xml
-  
-    - name: Sonar analysis
-      uses: SonarSource/sonarqube-scan-action@v7.0.0
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Prepare files
+        run: sed -i 's#'`pwd`'/##' results.xml coverage.xml
+
+      - name: Sonar analysis
+        uses: SonarSource/sonarqube-scan-action@v7.0.0
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
