@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a9c7919025616c0811ae1925f2df30ec",
+    "content-hash": "af2fa8aef23d71ff1b04bda68dd7adab",
     "packages": [
         {
             "name": "composer/semver",
@@ -786,16 +786,16 @@
         },
         {
             "name": "wp-cli/php-cli-tools",
-            "version": "v0.12.8",
+            "version": "v0.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wp-cli/php-cli-tools.git",
-                "reference": "9cbf9946ebe3462005b642de69ccd65753981517"
+                "reference": "4a04ffbe322b031b4c54e176edf1dfd299c7fe55"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wp-cli/php-cli-tools/zipball/9cbf9946ebe3462005b642de69ccd65753981517",
-                "reference": "9cbf9946ebe3462005b642de69ccd65753981517",
+                "url": "https://api.github.com/repos/wp-cli/php-cli-tools/zipball/4a04ffbe322b031b4c54e176edf1dfd299c7fe55",
+                "reference": "4a04ffbe322b031b4c54e176edf1dfd299c7fe55",
                 "shasum": ""
             },
             "require": {
@@ -843,9 +843,9 @@
             ],
             "support": {
                 "issues": "https://github.com/wp-cli/php-cli-tools/issues",
-                "source": "https://github.com/wp-cli/php-cli-tools/tree/v0.12.8"
+                "source": "https://github.com/wp-cli/php-cli-tools/tree/v0.13.0"
             },
-            "time": "2026-03-16T15:18:29+00:00"
+            "time": "2026-04-08T12:28:41+00:00"
         }
     ],
     "packages-dev": [
