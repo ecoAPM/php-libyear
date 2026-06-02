@@ -28,6 +28,8 @@ class Calculator
 	 */
 	public function getDependencyInfo(string $directory, bool $verbose): array
 	{
+		$min_stability = $this->composer->getMinimumStability($directory);
+
 		$repository_urls = $this->composer->getRepositories($directory);
 		$repositories = array_map(fn(string $url) => $this->repo_api->getInfo($url, $verbose), $repository_urls);
 
@@ -36,7 +38,7 @@ class Calculator
 		$this->progress->setTotal(count($dependencies));
 		$this->progress->display();
 		foreach ($dependencies as $dependency) {
-			$this->updateVersionInfo($dependency, array_filter($repositories), $verbose, $directory);
+			$this->updateVersionInfo($dependency, array_filter($repositories), $verbose, $min_stability);
 			$this->progress->tick();
 		}
 		$this->progress->finish();
@@ -44,14 +46,24 @@ class Calculator
 		return $dependencies;
 	}
 
+	private static array $stability_order = ['stable', 'RC', 'beta', 'alpha', 'dev'];
+
+	private static function isValidVersion(string $version, string $min_stability): bool
+	{
+		$min_index = array_search($min_stability, self::$stability_order);
+		$my_stability = VersionParser::parseStability($version);
+		$my_index = array_search($my_stability, self::$stability_order);
+		return $my_index <= $min_index;
+	}
+
 	/**
 	 * @param Dependency $dependency
 	 * @param Repository[] $repositories
 	 * @param bool $verbose
-	 * @param string $directory
+	 * @param string $min_stability
 	 * @return void
 	 */
-	private function updateVersionInfo(Dependency $dependency, array $repositories, bool $verbose, string $directory)
+	private function updateVersionInfo(Dependency $dependency, array $repositories, bool $verbose, string $min_stability): void
 	{
 		$package_info = [];
 		foreach ($repositories as $repository) {
@@ -66,14 +78,9 @@ class Calculator
 			return;
 		}
 
-		$stabilities = ['stable', 'RC', 'beta', 'alpha', 'dev'];
 		$sorted_versions = Semver::rsort(array_keys($versions));
-		$minStability = $this->composer->getMinimumStability($directory);
-		$minStabilityIndex = array_search($minStability, $stabilities);
-		$sorted_versions = array_values(array_filter(
-			$sorted_versions,
-			fn ($version) => array_search(VersionParser::parseStability($version), $stabilities) <= $minStabilityIndex
-		));
+		$valid_versions = array_filter($sorted_versions, fn(string $version) => self::isValidVersion($version, $min_stability));
+		$sorted_versions = array_values($valid_versions);
 
 		$current_version = $dependency->current_version->version_number;
 		$current_version_release_date = $this->getReleaseDate($sorted_versions, $versions, $current_version);
