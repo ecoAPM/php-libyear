@@ -10,7 +10,9 @@ class Factory
 {
 	public static function app(): App
 	{
+		$error_level = error_reporting(E_RECOVERABLE_ERROR);
 		$cli = new Cli();
+		error_reporting($error_level);
 
 		$fs = new FileSystem();
 		$file = new ComposerFile($fs, STDERR);
