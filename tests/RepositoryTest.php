@@ -19,15 +19,15 @@ class RepositoryTest extends TestCase
 		$this->assertEquals("https://composer.example.com/metadata/ecoapm/libyear.json", $url);
 	}
 
-	public function testCanGetDefaultPackageMetadataURL()
+	public function testCanGetAbsoluteMetadataURL()
 	{
 		//arrange
-		$repo = new Repository("https://composer.example.com/packages", null);
+		$repo = new Repository("https://composer.example.com/packages", "https://packages.example.com/metadata/%package%.json");
 
 		//act
 		$url = $repo->getMetadataURL("ecoapm/libyear");
 
 		//assert
-		$this->assertEquals("https://composer.example.com/packages/ecoapm/libyear.json", $url);
+		$this->assertEquals("https://packages.example.com/metadata/ecoapm/libyear.json", $url);
 	}
 }

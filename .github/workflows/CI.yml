@@ -1,22 +1,24 @@
 name: CI
-on: [ push, pull_request ]
+on: [push, pull_request]
 
 jobs:
   Build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        version: [ '8.1', '8.2' ]
+        version: ["8.1", "8.2", "8.3", "8.4"]
 
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
 
-    - uses: shivammathur/setup-php@v2
-      with:
-        php-version: ${{ matrix.version }}
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.version }}
 
-    - name: Install dependencies
-      run: composer install --prefer-dist --no-progress --no-suggest
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
 
-    - name: Run tests
-      run: vendor/bin/phpunit
+      - name: Run tests
+        run: vendor/bin/phpunit
