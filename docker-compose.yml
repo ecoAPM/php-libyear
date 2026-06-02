@@ -1,0 +1,7 @@
+services:
+  libyear:
+    image: library/php:8.5
+    volumes:
+      - .:/app
+    working_dir: /app
+    entrypoint: php libyear
