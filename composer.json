@@ -1,6 +1,6 @@
 {
     "name": "ecoapm/libyear",
-    "version": "3.1.0",
+    "version": "3.1.1",
     "description": "A simple measure of software dependency freshness",
     "homepage": "https://libyear.com",
     "readme": "README.md",
