@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b0e239be11bee76875ea47dfddef4956",
+    "content-hash": "43a8b2a1a29bbf9699280ba3f29ac48d",
     "packages": [
         {
             "name": "composer/semver",
@@ -85,16 +85,16 @@
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "8.0.0",
+            "version": "8.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "643356760d8efce521dfce2587d63fd9d0c70d72"
+                "reference": "3aeea0406aab88cbbd86531313d7cebf8ae149a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/643356760d8efce521dfce2587d63fd9d0c70d72",
-                "reference": "643356760d8efce521dfce2587d63fd9d0c70d72",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/3aeea0406aab88cbbd86531313d7cebf8ae149a4",
+                "reference": "3aeea0406aab88cbbd86531313d7cebf8ae149a4",
                 "shasum": ""
             },
             "require": {
@@ -114,7 +114,7 @@
                 "bamarni/composer-bin-plugin": "^1.8.2",
                 "ext-curl": "*",
                 "guzzle/client-integration-tests": "4.0.1",
-                "guzzlehttp/test-server": "^1.0@dev",
+                "guzzlehttp/test-server": "^1.0",
                 "php-http/message-factory": "^1.1",
                 "phpunit/phpunit": "^9.6.34",
                 "psr/log": "^1.1 || ^2.0 || ^3.0"
@@ -191,7 +191,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/guzzle/issues",
-                "source": "https://github.com/guzzle/guzzle/tree/8.0.0"
+                "source": "https://github.com/guzzle/guzzle/tree/8.0.1"
             },
             "funding": [
                 {
@@ -207,7 +207,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-07-20T13:53:10+00:00"
+            "time": "2026-07-26T23:23:24+00:00"
         },
         {
             "name": "guzzlehttp/promises",
@@ -2702,5 +2702,5 @@
         "ext-json": "^8.1"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
