@@ -14,7 +14,7 @@ Calculates the total number of years behind their respective newest versions for
 
 ## Requirements
 
-- PHP v8.1 or later
+- PHP v8.3 or later
 - Composer v2
 
 Ongoing commercial support for legacy versions of PHP is available for [Corporate, Premier, and Title Sponsors](https://github.com/sponsors/ecoAPM).
